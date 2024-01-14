@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Getter @Setter
+@Getter
 public class Movie {
 
     @Id
@@ -15,20 +15,15 @@ public class Movie {
     @Column(name = "movie_id")
     private Long movieId;
 
-    @Column(name = "title")
     private String title; // 영화 제목
 
-    @Column(name = "year")
-    private Long year; // 제작 연도
+    private String openYear; // 제작 연도
 
-    @Column(name = "user_rating")
     private Double userRating; // 평균 평점
 
-    @Column(name = "genre")
     private String genre; // 장르
 
     @OneToMany(mappedBy = "movie")
-    @Column(name = "review_list")
     private List<Review> reviewList = new ArrayList<>(); // 리뷰 목록
 
     @OneToMany(mappedBy = "movie")
@@ -36,5 +31,23 @@ public class Movie {
 
     @OneToMany(mappedBy = "movie")
     private List<MovieDirector> movieDirectorList = new ArrayList<>(); // 출연 감독 목록
+
+    // 생성 메서드
+    public static Movie createMovie(String title, String year, String genre){
+        Movie movie = new Movie();
+        movie.title = title;
+        movie.openYear = year;
+        movie.userRating = null;
+        movie.genre = genre;
+        return movie;
+    }
+
+    public void addMovieActor(MovieActor movieActor) {
+        this.movieActorList.add(movieActor);
+    }
+
+    public void addMovieDirector(MovieDirector movieDirector) {
+        this.movieDirectorList.add(movieDirector);
+    }
 
 }
