@@ -17,6 +17,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,10 +29,11 @@ public class MovieService {
     private final MovieRepository movieRepository;
 
     //영화 정보 update
-    public void updateMovieList(String targetDate) throws ParseException {
+    public void updateMovieList() throws ParseException {
 
         String boxOfficeSiteUrl; // 영화 boxOffice site 주소
         String movieInfoSiteUrl; // 영화 상세 정보 site 주소
+        String targetDate; // 조회 날짜
         String key; // 오픈 API 이용 key 값
         String itemPerPage; // 결과 행 수
         String movieGenre; // 영화 장르
@@ -42,6 +44,8 @@ public class MovieService {
 
         boxOfficeSiteUrl = "http://www.kobis.or.kr/kobisopenapi/webservice/rest/boxoffice";
         movieInfoSiteUrl = "http://www.kobis.or.kr/kobisopenapi/webservice/rest/movie";
+        targetDate = LocalDate.now().minusDays(1).toString(); // 어제 날짜
+        targetDate = targetDate.replace("-","");
         key = "05729aeda1ecc537be73bd2cc911b528";
         itemPerPage = "10";
 
@@ -110,14 +114,15 @@ public class MovieService {
             Movie movie = Movie.createMovie(movieName, movieOpenDate, movieGenre);
 
             for (int j = 0; j < actorList.size(); j++) {
+                Actor actor;
                 JSONObject object;
                 object = (JSONObject) actorList.get(j);
                 actorName = object.get("peopleNm").toString(); // 영화 배우 이름 설정
 
-                if (!actorRepository.findByName(actorName).isEmpty()){
-                    continue; // DB에 이미 존재하는 경우
+                actor = actorRepository.findByName(actorName).orElse(null);
+                if (actor == null){ // DB에 존재하지 않는 경우
+                    actor = Actor.createActor(actorName); // 배우 객체 생성
                 }
-                Actor actor = Actor.createActor(actorName); // 배우 객체 생성
                 MovieActor movieActor = MovieActor.createMovieActor(movie, actor);
                 actor.addMovieActor(movieActor);
                 movie.addMovieActor(movieActor);

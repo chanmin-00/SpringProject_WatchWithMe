@@ -14,7 +14,6 @@ public class Actor {
     @Column(name = "actor_id")
     private Long actorId;
 
-    @Column(name = "actor_name")
     private String name; // 배우 이름
 
     @OneToMany(mappedBy = "actor")
