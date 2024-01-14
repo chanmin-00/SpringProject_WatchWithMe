@@ -18,11 +18,14 @@ public class Review {
     @Column(name = "member_rating")
     private Double memberRating; // 평점
 
+    @Column(name = "member_rating_genre")
+    private Double memberRatingGenre; // 장르
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "movie_id")
     private Movie movie;
 }

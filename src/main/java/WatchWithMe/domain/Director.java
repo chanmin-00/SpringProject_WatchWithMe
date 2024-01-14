@@ -15,10 +15,10 @@ public class Director {
     @Column(name = "director_id")
     private Long directorId;
 
-    @Column(name = "name")
+    @Column(name = "director_name")
     private String name; // 감독 이름
 
     @OneToMany(mappedBy = "director")
-    private List<MovieActor> movieActorList = new ArrayList<>(); // 출연 영화 목록
+    private List<MovieDirector> movieDirectorList = new ArrayList<>(); // 출연 영화 목록
 
 }

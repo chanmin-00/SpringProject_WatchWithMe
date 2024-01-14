@@ -2,10 +2,9 @@ package WatchWithMe.domain;
 
 import jakarta.persistence.*;
 import lombok.Getter;
-import lombok.Setter;
 
 @Entity
-@Getter @Setter
+@Getter
 public class MovieActor {
 
     @Id
@@ -13,12 +12,20 @@ public class MovieActor {
     @Column(name = "movie_actor_id")
     private Long movieActorId;
 
-    @ManyToOne()
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "movie_id")
     private Movie movie;
 
-    @ManyToOne()
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "actor_id")
     private Actor actor;
+
+    // 생성 메서드
+    public static MovieActor createMovieActor(Movie movie, Actor actor){
+        MovieActor movieActor = new MovieActor();
+        movieActor.movie = movie;
+        movieActor.actor = actor;
+        return movieActor;
+    }
 
 }
