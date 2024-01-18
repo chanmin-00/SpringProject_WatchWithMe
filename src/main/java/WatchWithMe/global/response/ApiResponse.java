@@ -1,5 +1,7 @@
 package WatchWithMe.global.response;
 
+import WatchWithMe.global.exception.code.GlobalErrorCode;
+import WatchWithMe.global.exception.code.SuccessCode;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -12,12 +14,12 @@ public class ApiResponse<T> {
     private final T date;
 
     //성공 시 응답
-    public static <T>ApiResponse<T> onSuccesss(String message, T result){
-        return new ApiResponse<>(true, "OK", message, result);
+    public static <T>ApiResponse<T> onSuccess(String message, T result){
+        return new ApiResponse<>(true, SuccessCode._OK.getCode(), message, result);
     }
 
     //실패 시  응답
-    public static <T>ApiResponse<T> onFailure(String message, T result){
-        return new ApiResponse<>(false, "NO", message, result);
+    public static <T>ApiResponse<T> onFailure(GlobalErrorCode globalErrorCode, T result){
+        return new ApiResponse<>(false, globalErrorCode.getCode(), globalErrorCode.getMessage(), result);
     }
 }

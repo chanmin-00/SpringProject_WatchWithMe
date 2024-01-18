@@ -8,7 +8,6 @@ import WatchWithMe.repository.MovieRepository;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -29,7 +28,7 @@ public class MovieService {
     private final MovieRepository movieRepository;
 
     //영화 정보 update
-    public void updateMovieList() throws ParseException {
+    public void updateMovieList() throws Exception {
 
         String boxOfficeSiteUrl; // 영화 boxOffice site 주소
         String movieInfoSiteUrl; // 영화 상세 정보 site 주소
