@@ -1,9 +1,8 @@
 package WatchWithMe.service;
 
-import WatchWithMe.domain.Actor;
-import WatchWithMe.domain.Movie;
-import WatchWithMe.domain.MovieActor;
+import WatchWithMe.domain.*;
 import WatchWithMe.repository.ActorRepository;
+import WatchWithMe.repository.DirectorRepository;
 import WatchWithMe.repository.MovieRepository;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -25,6 +24,7 @@ import java.util.List;
 public class MovieService {
 
     private final ActorRepository actorRepository;
+    private final DirectorRepository directorRepository;
     private final MovieRepository movieRepository;
 
     //영화 정보 update
@@ -39,6 +39,7 @@ public class MovieService {
         String movieName; // 영화명
         String movieOpenDate; // 영화 개봉 연도
         String actorName; // 배우명
+        String directorName; // 감독명
         List<String> movieCodeList = new ArrayList<>();
 
         boxOfficeSiteUrl = "http://www.kobis.or.kr/kobisopenapi/webservice/rest/boxoffice";
@@ -126,6 +127,22 @@ public class MovieService {
                 actor.addMovieActor(movieActor);
                 movie.addMovieActor(movieActor);
                 actorRepository.save(actor);
+            }
+
+            for (int j = 0; j < directorList.size(); j++) {
+                Director director;
+                JSONObject object;
+                object = (JSONObject) directorList.get(j);
+                directorName = object.get("peopleNm").toString(); // 영화 감독 이름 설정
+
+                director = directorRepository.findByName(directorName).orElse(null);
+                if (director == null){ // DB에 존재하지 않는 경우
+                    director = director.createDirector(directorName); // 감독 객체 생성
+                }
+                MovieDirector movieDirector = MovieDirector.createMovieDirector(movie, director);
+                director.addMovieDirector(movieDirector);
+                movie.addMovieDirector(movieDirector);
+                directorRepository.save(director);
             }
             movieRepository.save(movie);
         }

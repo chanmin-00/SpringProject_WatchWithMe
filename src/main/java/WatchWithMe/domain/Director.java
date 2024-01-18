@@ -21,4 +21,15 @@ public class Director {
     @OneToMany(mappedBy = "director")
     private List<MovieDirector> movieDirectorList = new ArrayList<>(); // 출연 영화 목록
 
+    // 생성 메서드
+    public static Director createDirector(String directorName){
+        Director director = new Director();
+        director.name = directorName;
+        return director;
+    }
+
+    //연관 관계 메서드//
+    public void addMovieDirector(MovieDirector movieDirector) {
+        this.movieDirectorList.add(movieDirector);
+    }
 }
