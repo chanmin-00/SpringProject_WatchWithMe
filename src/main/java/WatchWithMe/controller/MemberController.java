@@ -15,9 +15,11 @@ public class MemberController {
     private final MemberService memberService;
 
     @PostMapping("/naver")
-    public ApiResponse<String> loginByNaver(){ // 네이버 로그인 화면 주소 요청
-        String naverLoginUri = memberService.loginByNaver();
-        return ApiResponse.onSuccess("로그인 주소를 조회했습니다.", naverLoginUri);
+    public ApiResponse<String> loginByNaver(){ // 네이버 로그인 주소 전달
+        String naverLoginUrl;
+
+        naverLoginUrl = memberService.loginByNaver();
+        return ApiResponse.onSuccess("로그인 주소를 조회했습니다.", naverLoginUrl);
     }
 
     @GetMapping("/login")
@@ -27,7 +29,7 @@ public class MemberController {
             memberId =  memberService.loginByToken(code);
         }
         catch(GlobalException e){
-            return ApiResponse.onFailure(GlobalErrorCode._INTERNAL_SERVER_ERROR, "");
+            return ApiResponse.onFailure(e.getGlobalErrorCode(), "");
         }
         return ApiResponse.onSuccess("로그인에 성공하였습니다.", memberId);
     }
@@ -39,7 +41,7 @@ public class MemberController {
             message =  memberService.logoutByToken(memberId);
         }
         catch(GlobalException e){
-            return ApiResponse.onFailure(GlobalErrorCode._INTERNAL_SERVER_ERROR, "");
+            return ApiResponse.onFailure(e.getGlobalErrorCode(), "");
         }
         return ApiResponse.onSuccess(message, "");
     }

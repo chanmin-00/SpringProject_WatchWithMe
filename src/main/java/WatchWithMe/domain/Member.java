@@ -14,15 +14,15 @@ public class Member {
     @Column(name = "member_id")
     private Long memberId;
 
-    @Column(name = "member_email") // 값이 null 인 경우 허용X
+    @Column(name = "member_email")
     private String email; // 이메일
 
-    @Column(name = "member_name", length = 10) // 값이 null 인 경우 허용X, 길이 제한 10
+    @Column(name = "member_name", length = 10) // 길이 제한 10
     private String name; // 이름
 
     private String mobile; // 휴대 전화번호
 
-    private String accessToken; // 네이버 로그인 토큰 값, 토큰 값 존재할 경우만 접근하도록 설정
+    private String accessToken; // 네이버 로그인 토큰 값, 토큰 값 존재할 경우만 접근 가능 설정
 
     private List<String> favoriteGenre = new ArrayList<>(); // 선호 장르 목록
 
