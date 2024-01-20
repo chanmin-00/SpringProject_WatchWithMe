@@ -98,7 +98,7 @@ public class MovieService {
             JSONArray directorList = (JSONArray) movieInfo.get("directors");
 
             movieName = movieInfo.get("movieNm").toString(); // 영화명 설정
-            movieOpenDate = movieInfo.get("openDt").toString(); // 영화 개봉 연도 설정
+            movieOpenDate = movieInfo.get("openDt").toString().substring(0,4); // 영화 개봉 연도 설정
             movieGenre = "";
             for (int j = 0; j < genreList.size(); j++) {
                 JSONObject object;
