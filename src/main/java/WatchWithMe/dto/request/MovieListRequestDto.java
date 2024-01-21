@@ -1,19 +1,23 @@
 package WatchWithMe.dto.request;
 
-import lombok.AllArgsConstructor;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
-@AllArgsConstructor
 @Getter
-@NoArgsConstructor
 public class MovieListRequestDto {
 
-    private String title; // 영화 제목
+    @NotBlank(message = "영화명을 입력해주세요")
+    private String title; // 영화명
 
-    private String openYear; // 제작 연도
+    @NotBlank(message = "개봉 연도를 입력해주세요")
+    private String openYear; // 개봉 연도
 
-    private Integer userRating; // 평균 평점, 1-5 정수
+    @NotBlank(message = "최고 평점을 입력해주세요")
+    private Integer userRatingHigh; // 최고 평점
 
+    @NotBlank(message = "최저 평점을 입력해주세요")
+    private Integer userRatingLow; // 최저 평점
+
+    @NotBlank(message = "장르를 입력해주세요")
     private String genre; // 장르
 }

@@ -1,9 +1,13 @@
 package WatchWithMe.service;
 
 import WatchWithMe.domain.*;
+import WatchWithMe.dto.request.MovieListRequestDto;
+import WatchWithMe.dto.response.MovieListResponseDto;
 import WatchWithMe.repository.ActorRepository;
 import WatchWithMe.repository.DirectorRepository;
-import WatchWithMe.repository.MovieRepository;
+import WatchWithMe.repository.MovieActorRepository;
+import WatchWithMe.repository.MovieDirectorRepository;
+import WatchWithMe.repository.movie.MovieRepository;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -24,6 +28,8 @@ import java.util.List;
 public class MovieService {
 
     private final ActorRepository actorRepository;
+    private final MovieActorRepository movieActorRepository;
+    private final MovieDirectorRepository movieDirectorRepository;
     private final DirectorRepository directorRepository;
     private final MovieRepository movieRepository;
 
@@ -112,7 +118,7 @@ public class MovieService {
             }
 
             Movie movie = Movie.createMovie(movieName, movieOpenDate, movieGenre);
-
+            movieRepository.save(movie);
             for (int j = 0; j < actorList.size(); j++) {
                 Actor actor;
                 JSONObject object;
@@ -127,6 +133,7 @@ public class MovieService {
                 actor.addMovieActor(movieActor);
                 movie.addMovieActor(movieActor);
                 actorRepository.save(actor);
+                movieActorRepository.save(movieActor);
             }
 
             for (int j = 0; j < directorList.size(); j++) {
@@ -143,8 +150,21 @@ public class MovieService {
                 director.addMovieDirector(movieDirector);
                 movie.addMovieDirector(movieDirector);
                 directorRepository.save(director);
+                movieDirectorRepository.save(movieDirector);
             }
-            movieRepository.save(movie);
+
         }
+    }
+
+    // 영화 조회(영화명, 영화 장르, 개봉 연도, 평점)
+    public List<MovieListResponseDto> searchMovieList(MovieListRequestDto movieListRequestDto){
+        List<MovieListResponseDto> movieListResponseDtoList = new ArrayList<>();
+
+        List<Movie> movieList = movieRepository.search(movieListRequestDto);
+        for(int i = 0; i < movieList.size(); i++){
+            MovieListResponseDto movieListResponseDto = new MovieListResponseDto(movieList.get(i));
+            movieListResponseDtoList.add(movieListResponseDto);
+        }
+        return movieListResponseDtoList;
     }
 }
