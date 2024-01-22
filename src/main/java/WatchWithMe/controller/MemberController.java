@@ -1,7 +1,5 @@
 package WatchWithMe.controller;
 
-import WatchWithMe.global.exception.code.GlobalErrorCode;
-import WatchWithMe.global.exception.dto.GlobalException;
 import WatchWithMe.global.response.ApiResponse;
 import WatchWithMe.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -25,24 +23,16 @@ public class MemberController {
     @GetMapping("/login")
     public ApiResponse loginByToken(@RequestParam(name = "code") String code){
         Long memberId;
-        try {
-            memberId =  memberService.loginByToken(code);
-        }
-        catch(GlobalException e){
-            return ApiResponse.onFailure(e.getGlobalErrorCode(), "");
-        }
+
+        memberId =  memberService.loginByToken(code);
         return ApiResponse.onSuccess("로그인에 성공하였습니다.", memberId);
     }
 
     @PostMapping("/logout/{memberId}")
     public ApiResponse logoutByToken(@PathVariable Long memberId){
         String message;
-        try {
-            message =  memberService.logoutByToken(memberId);
-        }
-        catch(GlobalException e){
-            return ApiResponse.onFailure(e.getGlobalErrorCode(), "");
-        }
+
+        message =  memberService.logoutByToken(memberId);
         return ApiResponse.onSuccess(message, "");
     }
 }

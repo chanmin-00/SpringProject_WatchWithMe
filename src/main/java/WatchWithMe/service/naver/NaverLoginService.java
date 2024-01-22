@@ -2,8 +2,7 @@ package WatchWithMe.service.naver;
 
 import WatchWithMe.domain.Member;
 import WatchWithMe.global.exception.code.GlobalErrorCode;
-import WatchWithMe.global.exception.dto.GlobalException;
-import WatchWithMe.global.exception.dto.GlobalExceptionHandler;
+import WatchWithMe.global.exception.GlobalException;
 import WatchWithMe.repository.MemberRepository;
 import WatchWithMe.service.naver.dto.NaverTokenResponseDto;
 import WatchWithMe.service.naver.dto.NaverUserResponseDto;
@@ -25,7 +24,16 @@ public class NaverLoginService {
     private final NaverProperties naverProperties;
 
     public String requestNaverLogin(){ //로그인 인증 화면 주소 요청
-        return naverProperties.getRequestAuthorizeUri();
+        String requestAuthorizeUrl;
+        try {
+            requestAuthorizeUrl = naverProperties.getRequestAuthorizeUrl();
+        }
+        catch (Exception e){
+            throw new GlobalException(GlobalErrorCode._INTERNAL_SERVER_ERROR);
+        }
+        if (requestAuthorizeUrl == null)
+            throw new GlobalException(GlobalErrorCode._INTERNAL_SERVER_ERROR);
+        return requestAuthorizeUrl;
     }
 
     public String requestNaverLogout(Long memberId){ // 토큰 삭제 후 로그아웃 요청
@@ -35,17 +43,19 @@ public class NaverLoginService {
 
         member = memberRepository.findById(memberId).orElse(null);
         if (member == null) { // DB에 존재하지 않는 경우
-            throw new GlobalExceptionHandler(GlobalErrorCode._ACCOUNT_NOT_FOUND);
+            throw new GlobalException(GlobalErrorCode._ACCOUNT_NOT_FOUND);
         }
         accessToken = member.getAccessToken();
         if (accessToken == null) { // 토큰이 존재하지 않는 경우
-            throw new GlobalExceptionHandler(GlobalErrorCode._BAD_REQUEST);
+            throw new GlobalException(GlobalErrorCode._UNAUTHORIZED_TOKEN);
         }
-
-        ResponseEntity<String> response =
-                restTemplate.exchange(naverProperties.getRequestDeleteTokenUrL(accessToken), HttpMethod.GET, null, String.class);
-        if (response == null)
-            throw new GlobalExceptionHandler(GlobalErrorCode._INTERNAL_SERVER_ERROR);
+        try {
+            ResponseEntity<String> response =
+                    restTemplate.exchange(naverProperties.getRequestDeleteTokenUrl(accessToken), HttpMethod.GET, null, String.class);
+        }
+        catch (Exception e){
+            throw new GlobalException(GlobalErrorCode._INTERNAL_SERVER_ERROR);
+        }
 
         return "로그아웃에 성공하셨습니다";
     }
@@ -59,8 +69,8 @@ public class NaverLoginService {
             accessToken = requestAccessToken(code);
             profile = requestProfile(accessToken);
         }
-        catch (GlobalException e){
-            throw new GlobalExceptionHandler(GlobalErrorCode._INTERNAL_SERVER_ERROR);
+        catch (Exception e){
+            throw new GlobalException(GlobalErrorCode._INTERNAL_SERVER_ERROR);
         }
 
         Member member = new Member();
@@ -71,14 +81,14 @@ public class NaverLoginService {
         return member;
     }
 
-    private String requestAccessToken(String code) throws GlobalException {
+    private String requestAccessToken(String code) throws Exception {
         ResponseEntity<NaverTokenResponseDto> response =
-                restTemplate.exchange(naverProperties.getRequestTokenURL(code), HttpMethod.GET, null, NaverTokenResponseDto.class);
+                restTemplate.exchange(naverProperties.getRequestTokenUrl(code), HttpMethod.GET, null, NaverTokenResponseDto.class);
 
         return response.getBody().getAccessToken();
     }
 
-    private NaverUserResponseDto.NaverUserDetail requestProfile(String accessToken) throws GlobalException{
+    private NaverUserResponseDto.NaverUserDetail requestProfile(String accessToken) throws Exception{
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(accessToken);
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(headers);
