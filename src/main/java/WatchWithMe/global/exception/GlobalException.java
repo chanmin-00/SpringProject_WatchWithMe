@@ -1,4 +1,4 @@
-package WatchWithMe.global.exception.dto;
+package WatchWithMe.global.exception;
 
 import WatchWithMe.global.exception.code.GlobalErrorCode;
 import lombok.AllArgsConstructor;

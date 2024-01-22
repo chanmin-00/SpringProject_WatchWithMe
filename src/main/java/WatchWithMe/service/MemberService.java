@@ -1,12 +1,12 @@
 package WatchWithMe.service;
 
 import WatchWithMe.domain.Member;
+import WatchWithMe.global.exception.GlobalException;
+import WatchWithMe.global.exception.code.GlobalErrorCode;
 import WatchWithMe.repository.MemberRepository;
 import WatchWithMe.service.naver.NaverLoginService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -43,6 +43,9 @@ public class MemberService {
         member = memberRepository.findById(memberId).orElse(null);
         if (member != null){
             member.setAccessToken(null); // 토큰 값 널로 설정
+        }
+        else {
+            throw new GlobalException(GlobalErrorCode._ACCOUNT_NOT_FOUND);
         }
         return result;
     }

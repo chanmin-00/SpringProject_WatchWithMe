@@ -10,22 +10,22 @@ import org.springframework.web.util.UriComponentsBuilder;
 @ConfigurationProperties(prefix = "naver")
 public class NaverProperties {
 
-    private String requestAuthorizeUri; // 로그인 요청 화면 주소
-    private String requestTokenUri; // 토근 접근 화면 주소
-    private String redirectUri;
+    private String requestAuthorizeUrl; // 로그인 요청 화면 주소
+    private String requestTokenUrl; // 토근 접근 화면 주소
+    private String redirectUrl;
     private String clientId;
     private String clientSecret;
 
-    public String getRequestAuthorizeUri(){ // 로그인 인증 요청 화면 주소 가져오기
-        return UriComponentsBuilder.fromHttpUrl(requestAuthorizeUri)
+    public String getRequestAuthorizeUrl() throws Exception { // 로그인 인증 요청 화면 주소 가져오기
+        return UriComponentsBuilder.fromHttpUrl(requestAuthorizeUrl)
                 .queryParam("response_type", "code")
                 .queryParam("client_id", clientId)
-                .queryParam("redirect_uri", redirectUri)
+                .queryParam("redirect_uri", redirectUrl)
                 .toUriString();
     }
 
-    public String getRequestTokenURL(String code){ // 토큰 요청 화면 주소 가져오기
-        return UriComponentsBuilder.fromHttpUrl(requestTokenUri)
+    public String getRequestTokenUrl(String code) throws Exception { // 토큰 요청 화면 주소 가져오기
+        return UriComponentsBuilder.fromHttpUrl(requestTokenUrl)
                 .queryParam("grant_type", "authorization_code")
                 .queryParam("client_id", clientId)
                 .queryParam("client_secret", clientSecret)
@@ -33,8 +33,8 @@ public class NaverProperties {
                 .toUriString();
     }
 
-    public String getRequestDeleteTokenUrL(String accessToken){ // 로그아웃 화면 불러오기
-        return UriComponentsBuilder.fromHttpUrl(requestTokenUri)
+    public String getRequestDeleteTokenUrl(String accessToken) throws Exception{ // 로그아웃 화면 불러오기
+        return UriComponentsBuilder.fromHttpUrl(requestTokenUrl)
                 .queryParam("grant_type", "delete")
                 .queryParam("client_id", clientId)
                 .queryParam("client_secret", clientSecret)
