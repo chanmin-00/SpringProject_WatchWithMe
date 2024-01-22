@@ -15,9 +15,9 @@ spring:
         format_sql: true
 
 naver:
-  request_authorize_uri: https://nid.naver.com/oauth2.0/authorize
-  request_token_uri: https://nid.naver.com/oauth2.0/token
-  redirect_uri: http://localhost:8080/member/login
+  request_authorize_url: https://nid.naver.com/oauth2.0/authorize
+  request_token_url: https://nid.naver.com/oauth2.0/token
+  redirect_url: http://localhost:8080/member/login
   client_id: SyFqItV5kCVSfgB_f0Lx
   client_secret: NSuHu1Zyx3
 
