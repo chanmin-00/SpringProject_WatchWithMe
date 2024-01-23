@@ -17,6 +17,9 @@ public class MovieController {
 
     private final MovieService movieService;
 
+    /*
+    영화 정보 업데이트
+     */
     @PostMapping("/update")
     public ApiResponse update(){
         try {
@@ -28,6 +31,9 @@ public class MovieController {
         return ApiResponse.onSuccess("업데이트에 성공하였습니다.", "");
     }
 
+    /*
+    영화 검색
+     */
     @PostMapping("/search")
     public ApiResponse search(@RequestBody MovieListRequestDto movieListRequestDto) {
         return ApiResponse.onSuccess("영화 조건 검색에 성공했습니다", movieService.searchMovieList(movieListRequestDto));
