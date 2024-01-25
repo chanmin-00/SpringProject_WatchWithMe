@@ -22,6 +22,9 @@ public class Member {
 
     private String mobile; // 휴대 전화번호
 
+    @Enumerated(EnumType.STRING)
+    private Role role; // 권한, ROLL_MEMBER, ROLL_ADMIN
+
     private String accessToken; // 네이버 로그인 토큰 값, 토큰 값 존재할 경우만 접근 가능 설정
 
     private List<String> favoriteGenre = new ArrayList<>(); // 선호 장르 목록
@@ -33,4 +36,7 @@ public class Member {
     @OneToMany(mappedBy = "member")
     private List<Review> reviewList = new ArrayList<>(); // 리뷰 리스트
 
+    public enum Role {
+        MEMBER, ADMIN
+    }
 }

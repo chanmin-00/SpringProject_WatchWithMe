@@ -11,9 +11,12 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @RestControllerAdvice(annotations = {RestController.class})
 public class ExceptionAdvice extends ResponseEntityExceptionHandler {
 
+    /*
     @ExceptionHandler(value = {GlobalException.class})
     protected ApiResponse<String> handleException(GlobalException e) {
         log.error(e.getMessage() + ": " + e.getGlobalErrorCode());
         return ApiResponse.onFailure(e.getGlobalErrorCode(), "");
     }
+
+     */
 }

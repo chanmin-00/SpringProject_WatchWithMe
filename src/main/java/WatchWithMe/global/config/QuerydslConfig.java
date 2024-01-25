@@ -1,4 +1,4 @@
-package WatchWithMe;
+package WatchWithMe.global.config;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
