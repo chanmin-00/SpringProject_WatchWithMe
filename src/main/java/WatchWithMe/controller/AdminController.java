@@ -18,7 +18,7 @@ public class AdminController {
     /*
     영화 정보 업데이트
      */
-    @PostMapping("/update")
+    @PostMapping("update")
     public ApiResponse update(){
         try {
             movieService.updateMovieList();

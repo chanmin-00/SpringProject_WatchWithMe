@@ -1,14 +1,16 @@
 package WatchWithMe.domain;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Getter @Setter
-public class Member {
+@Getter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class Member extends BaseEntity{
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_id")
@@ -20,23 +22,25 @@ public class Member {
     @Column(name = "member_name", length = 10) // 길이 제한 10
     private String name; // 이름
 
+    @Column(length=65, nullable = false)
+    private String password;
+
     private String mobile; // 휴대 전화번호
 
     @Enumerated(EnumType.STRING)
-    private Role role; // 권한, ROLL_MEMBER, ROLL_ADMIN
+    @Column(length=30, nullable = false)
+    private Role role;
 
-    private String accessToken; // 네이버 로그인 토큰 값, 토큰 값 존재할 경우만 접근 가능 설정
+    private List<String> favoriteGenre; // 선호 장르 목록
 
-    private List<String> favoriteGenre = new ArrayList<>(); // 선호 장르 목록
+    private List<String> favoriteActor; // 선호 배우 목록
 
-    private List<String> favoriteActor = new ArrayList<>(); // 선호 배우 목록
-
-    private List<String> favoriteDirector = new ArrayList<>(); // 선호 감독 목록
+    private List<String> favoriteDirector; // 선호 감독 목록
 
     @OneToMany(mappedBy = "member")
-    private List<Review> reviewList = new ArrayList<>(); // 리뷰 리스트
+    private List<Review> reviewList; // 리뷰 리스트
 
     public enum Role {
-        MEMBER, ADMIN
+        USER, ADMIN
     }
 }
