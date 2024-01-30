@@ -20,9 +20,9 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
     private final TokenProvider tokenProvider;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
-    private final MemberRepository repository;
 
-    public void save(SignUpRequestDto signUpRequestDto) {
+    // 회원 가입
+    public Long save(SignUpRequestDto signUpRequestDto) {
         String password = passwordEncoder.encode(signUpRequestDto.password());
         Member member = Member.builder()
                 .email(signUpRequestDto.email())
@@ -32,13 +32,14 @@ public class MemberService {
                 .role(Member.Role.USER)
                 .build();
         save(member);
+        return member.getMemberId();
     }
 
     public void save(Member member) {
-
         memberRepository.saveAndFlush(member);
     }
 
+    // 로그인 인증 및 토큰 발급
     public LoginResponseDto authenticate(String email, String password) {
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(email, password);
 

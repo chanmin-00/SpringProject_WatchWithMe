@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/user")
+@RequestMapping("/api/v1/movie")
 public class MovieController {
 
     private final MovieService movieService;
@@ -20,7 +20,7 @@ public class MovieController {
     /*
     영화 검색
      */
-    @PostMapping("/movie/search")
+    @PostMapping("/search")
     public ApiResponse search(@RequestBody MovieListRequestDto movieListRequestDto) {
         return ApiResponse.onSuccess("영화 조건 검색에 성공했습니다", movieService.searchMovieList(movieListRequestDto));
     }

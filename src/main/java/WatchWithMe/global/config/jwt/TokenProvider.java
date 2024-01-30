@@ -11,7 +11,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-
 import java.security.Key;
 import java.util.Arrays;
 import java.util.Date;
@@ -56,9 +55,6 @@ public class TokenProvider {
      * 토큰을 받아 클레임을 생성
      * 클레임에서 권한 정보를 가져와서 시큐리티 UserDetails 객체를 만들고
      * Authentication 객체 반환
-     *
-     * @param token
-     * @return
      */
     public Authentication getAuthentication(String token) {
         Claims claims = Jwts.parser()
@@ -80,9 +76,6 @@ public class TokenProvider {
 
     /**
      * 토큰 유효성 체크
-     *
-     * @param token
-     * @return
      */
     public boolean validateToken(String token) {
         try {
