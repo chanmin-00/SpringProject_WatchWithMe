@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/admin")
+@RequestMapping("/api/v1/admin")
 public class AdminController {
 
     private final MovieService movieService;
@@ -18,7 +18,7 @@ public class AdminController {
     /*
     영화 정보 업데이트
      */
-    @PostMapping("update")
+    @PostMapping("movie/update")
     public ApiResponse update(){
         try {
             movieService.updateMovieList();

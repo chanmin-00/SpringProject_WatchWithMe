@@ -1,26 +1,31 @@
 package WatchWithMe.dto.request;
 
-import jakarta.validation.constraints.AssertTrue;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.*;
 
 public record SignUpRequestDto (
-    @NotBlank
+    @NotBlank(message = "필수 입력값입니다")
+    @Size(min = 10, message = "이메일은 최소 10자 이상이어야 합니다")
     @Email
     String email,
 
-    @NotBlank
+    @NotBlank(message = "필수 입력값입니다")
+    @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{5,}$",
+            message = "영어, 숫자, 특수문자(@#$%^&+=!)를 모두 포함해야 합니다")
+    @Size(min = 5, message = "비밀번호는 최소 5자 이상이어야 합니다")
     String password,
 
-    @NotBlank
+    @NotBlank(message = "필수 입력값입니다")
+    @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{5,}$",
+            message = "영어, 숫자, 특수문자(@#$%^&+=!)를 모두 포함해야 합니다")
+    @Size(min = 5, message = "비밀번호는 최소 5자 이상이어야 합니다")
     String confirmPassword,
 
-    @NotBlank
+    @NotBlank(message = "필수 입력값입니다")
     String name,
 
-    @NotBlank
+    @NotBlank(message = "필수 입력값입니다")
     String mobile,
 
-    @AssertTrue
+    @AssertTrue(message = "필수 동의 사항입니다")
     boolean agree
 ){}

@@ -8,7 +8,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     properties:
       hibernate:
         show_sql: true
@@ -22,7 +22,7 @@ spring:
 jwt:
   header: Authorization
   secret: YWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd6eXoxMjMxMjMxMjMxMjMxMjMxMzEyMzEyMzEzMTIzMTIzMTIzMTMxMjMxMzEzMTMxMjM
-  accessTokenValidityInSeconds: 60 # 3600 60min
+  accessTokenValidityInSeconds: 3600 # 3600 60min
 
 
 #logging.level:

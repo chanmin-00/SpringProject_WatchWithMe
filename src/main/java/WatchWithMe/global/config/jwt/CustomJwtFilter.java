@@ -34,9 +34,9 @@ public class CustomJwtFilter extends GenericFilterBean {
             // 토큰에서 사용자명, 권한을 추출하여 스프링 시큐리티 사용자를 만들어 Authentication 반환
             Authentication authentication = tokenProvider.getAuthentication(jwt);
             SecurityContextHolder.getContext().setAuthentication(authentication);
-            log.debug("Security Context에 %s 인증 정보를 저장했습니다. URI : %s", authentication.getName(), requestURI);
+            log.info("Security Context에 " + authentication.getName() + "인증 정보를 저장했습니다. URI : " + requestURI);
         } else {
-            log.debug("유효한 JWT 토큰이 없습니다. URI: %s", requestURI);
+            log.info("유효한 JWT 토큰이 없습니다. URI: " + requestURI);
         }
 
         chain.doFilter(request, response);

@@ -18,7 +18,7 @@ import org.springframework.web.filter.CorsFilter;
 
 @Configuration
 @EnableWebSecurity // 기본 웹 보안 활성화
-@EnableMethodSecurity // @PreAuthorize 애노테이션 활성화
+@EnableMethodSecurity // @PreAuthorize 활성화
 public class SecurityConfig {
 
     @Autowired
@@ -47,6 +47,7 @@ public class SecurityConfig {
                                     "/api/v1/member/token",
                                     "/api/v1/member/login",
                                     "/api/v1/member/exists/**").permitAll()
+                            .requestMatchers("/api/v1/admin/**").hasAuthority("ADMIN")
                             .anyRequest().authenticated();
                 });
 
@@ -55,7 +56,6 @@ public class SecurityConfig {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-
         return new BCryptPasswordEncoder();
     }
 }
