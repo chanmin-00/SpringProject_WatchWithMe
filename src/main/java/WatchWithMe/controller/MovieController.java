@@ -1,7 +1,6 @@
 package WatchWithMe.controller;
 
 import WatchWithMe.dto.request.MovieListRequestDto;
-import WatchWithMe.global.exception.code.GlobalErrorCode;
 import WatchWithMe.global.response.ApiResponse;
 import WatchWithMe.service.MovieService;
 import lombok.RequiredArgsConstructor;

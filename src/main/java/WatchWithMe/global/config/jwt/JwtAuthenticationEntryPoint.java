@@ -26,7 +26,7 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
         data = ApiResponse.onFailure(GlobalErrorCode._UNAUTHORIZED_TOKEN, "");
 
         // Json 형식의 문자열로 변경
-        String result = objectMapper.writeValueAsString(data);;
+        String result = objectMapper.writeValueAsString(data);
         response.getWriter().write(result);
     }
 

@@ -4,7 +4,6 @@ import WatchWithMe.global.exception.code.GlobalErrorCode;
 import WatchWithMe.global.response.ApiResponse;
 import WatchWithMe.service.MovieService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
