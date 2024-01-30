@@ -4,6 +4,8 @@ import WatchWithMe.domain.Member;
 import WatchWithMe.dto.request.SignUpRequestDto;
 import WatchWithMe.dto.response.LoginResponseDto;
 import WatchWithMe.global.config.jwt.TokenProvider;
+import WatchWithMe.global.exception.GlobalException;
+import WatchWithMe.global.exception.code.GlobalErrorCode;
 import WatchWithMe.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -53,5 +55,24 @@ public class MemberService {
                 .build();
     }
 
+    // 회원가입 아이디, 비밀번호 유효성 검사
+    public boolean validateSignUpRequest(SignUpRequestDto signUpRequestDto){
+
+        String email = signUpRequestDto.email();
+        String password = signUpRequestDto.password();
+        String confirmPassword = signUpRequestDto.confirmPassword();
+
+        // 이메일 즁복 검사
+        Member member = memberRepository.findByEmail(email).orElse(null);
+        if(member != null)
+            throw new GlobalException(GlobalErrorCode._DUPLICATE_EMAIL);
+
+        // 비밀번호 일치 검사
+        if (!password.equals(confirmPassword))
+            throw new GlobalException(GlobalErrorCode._DIFF_PASSWORD);
+
+        return true;
+
+    }
 
 }
