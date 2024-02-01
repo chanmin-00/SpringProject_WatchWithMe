@@ -10,6 +10,8 @@ import java.util.stream.Collectors;
 @Setter
 public class MovieListResponseDto {
 
+    private Long movieId; // movieId
+
     private String title; // 영화명
 
     private String openYear; // 개봉 연도
@@ -22,6 +24,7 @@ public class MovieListResponseDto {
     private List<MovieDirectorResponseDto> movieDirectorDtoList; // 영화 배우 리스트
 
     public MovieListResponseDto(Movie movie) {
+        this.movieId = movie.getMovieId();
         this.title = movie.getTitle();
         this.openYear = movie.getOpenYear();
         this.userRating = movie.getUserRating();
