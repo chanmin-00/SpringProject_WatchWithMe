@@ -1,6 +1,7 @@
 package WatchWithMe.service.member;
 
 import WatchWithMe.domain.Member;
+import WatchWithMe.domain.Review;
 import WatchWithMe.dto.request.SignUpRequestDto;
 import WatchWithMe.dto.response.LoginResponseDto;
 import WatchWithMe.global.config.jwt.TokenProvider;
@@ -13,6 +14,10 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -73,6 +78,35 @@ public class MemberService {
 
         return true;
 
+    }
+
+    // 선호 장르 목록 업데이트
+    public Long updateFavoriteGenre(Long memberId){
+
+        Map<String, Long> genreCountMap = new HashMap<>(); // 사용자 작성 리뷰의 영화 장르 개수 카운트
+
+        Member member = memberRepository.findById(memberId).orElse(null);
+        if (member == null)
+            throw new GlobalException(GlobalErrorCode._ACCOUNT_NOT_FOUND);
+
+        // 장르별 개수 세기
+        List<Review> reviewList = member.getReviewList();
+        for(Review review : reviewList) {
+            String genre = review.getMovie().getGenre();
+            genreCountMap.compute(genre, (key, value) -> (value == null) ? 1L : value + 1L);
+        }
+
+        // 장르별 개수 중 상위 5위 장르 추출
+        List<String> favoriteGenre = genreCountMap.entrySet()
+                .stream()
+                .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
+                .limit(5)
+                .map(Map.Entry::getKey)
+                .toList();
+
+        member.setFavoriteGenre(favoriteGenre);
+        memberRepository.save(member);
+        return member.getMemberId();
     }
 
 }

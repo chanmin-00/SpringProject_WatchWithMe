@@ -3,7 +3,8 @@ package WatchWithMe.service;
 import WatchWithMe.domain.Member;
 import WatchWithMe.domain.Movie;
 import WatchWithMe.domain.Review;
-import WatchWithMe.dto.request.WriteReviewRequestDto;
+import WatchWithMe.dto.request.review.ChangeReviewRequestDto;
+import WatchWithMe.dto.request.review.WriteReviewRequestDto;
 import WatchWithMe.dto.response.ReviewResponseDto;
 import WatchWithMe.global.exception.GlobalException;
 import WatchWithMe.global.exception.code.GlobalErrorCode;
@@ -48,6 +49,36 @@ public class ReviewService {
         reviewRepository.save(review);
 
         return review.getReviewId();
+    }
+
+    /*
+    리뷰 수정
+     */
+    public Long change(Long reviewId, ChangeReviewRequestDto changeReviewRequestDto){
+
+        String reviewText = changeReviewRequestDto.reviewText();
+        Double memberRating = changeReviewRequestDto.memberRating();
+        String  memberRatingGenre = changeReviewRequestDto.memberRatingGenre();
+
+        Review review = reviewRepository.findById(reviewId).orElse(null);
+        if (review == null)
+            throw new GlobalException(GlobalErrorCode._BAD_REQUEST);
+        review.changeReview(reviewText, memberRating, memberRatingGenre);
+
+        reviewRepository.save(review);
+        return review.getReviewId();
+    }
+
+    /*
+    내가 쓴 리뷰 삭제
+     */
+    public void delete(Long reviewId){
+
+        Review review = reviewRepository.findById(reviewId).orElse(null);
+        if (review == null)
+            throw new GlobalException(GlobalErrorCode._BAD_REQUEST);
+
+        reviewRepository.delete(review);
     }
 
     /*

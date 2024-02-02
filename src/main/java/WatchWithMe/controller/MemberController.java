@@ -18,8 +18,8 @@ public class MemberController {
 
     private final MemberService memberService;
 
-    /**
-     * accessToken 발급
+    /*
+     accessToken 발급
      */
     @PostMapping("/token")
     public ApiResponse<LoginResponseDto> authorize(@RequestBody @Valid LoginRequestDto loginRequestDto) {
@@ -31,8 +31,8 @@ public class MemberController {
     }
 
 
-    /**
-     * 회원가입 처리
+    /*
+     회원가입 처리
      */
     @PostMapping
     public ApiResponse<Long> join(@RequestBody @Valid SignUpRequestDto signUpRequestDto) {
@@ -43,5 +43,4 @@ public class MemberController {
         data = ApiResponse.onSuccess("회원가입에 성공하였습니다.", memberId);
         return data;
     }
-
 }

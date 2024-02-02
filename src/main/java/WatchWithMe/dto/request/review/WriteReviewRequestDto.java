@@ -1,4 +1,4 @@
-package WatchWithMe.dto.request;
+package WatchWithMe.dto.request.review;
 
 import jakarta.validation.constraints.*;
 

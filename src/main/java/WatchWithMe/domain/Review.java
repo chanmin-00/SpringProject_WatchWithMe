@@ -39,6 +39,13 @@ public class Review {
         return review;
     }
 
+    // 수정 메서드
+    public void changeReview(String reviewText, Double memberRating, String memberRatingGenre){
+        this.reviewText = reviewText;
+        this.memberRating = memberRating;
+        this.memberRatingGenre = memberRatingGenre;
+    }
+
     public void setMovie(Movie movie) {
         this.movie = movie;
         movie.getReviewList().add(this);
