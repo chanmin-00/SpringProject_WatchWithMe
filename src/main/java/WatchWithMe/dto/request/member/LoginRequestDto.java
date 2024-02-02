@@ -1,4 +1,4 @@
-package WatchWithMe.dto.request;
+package WatchWithMe.dto.request.member;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

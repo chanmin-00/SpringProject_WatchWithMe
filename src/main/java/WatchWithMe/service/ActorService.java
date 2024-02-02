@@ -4,7 +4,7 @@ import WatchWithMe.domain.Actor;
 import WatchWithMe.domain.Movie;
 import WatchWithMe.domain.MovieActor;
 import WatchWithMe.dto.request.ActorListRequestDto;
-import WatchWithMe.dto.response.MovieListResponseDto;
+import WatchWithMe.dto.response.movie.MovieResponseDto;
 import WatchWithMe.repository.actor.ActorRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,8 +19,8 @@ public class ActorService {
     private final ActorRepository actorRepository;
 
     // 배우별 영화 조회
-    public List<MovieListResponseDto> searchMovieListByActor(ActorListRequestDto actorListRequestDto){
-        List<MovieListResponseDto> movieListResponseDtoList = new ArrayList<>();
+    public List<MovieResponseDto> searchMovieListByActor(ActorListRequestDto actorListRequestDto){
+        List<MovieResponseDto> movieListResponseDtoList = new ArrayList<>();
 
         List<Actor> actorList = actorRepository.search(actorListRequestDto);
         for(int i = 0;i < actorList.size();i++){
@@ -29,7 +29,7 @@ public class ActorService {
             for(int j = 0;j < movieActorList.size();j++){
                 MovieActor movieActor = movieActorList.get(j);
                 Movie movie = movieActor.getMovie();
-                MovieListResponseDto movieListResponseDto = new MovieListResponseDto(movie);
+                MovieResponseDto movieListResponseDto = new MovieResponseDto(movie);
                 movieListResponseDtoList.add(movieListResponseDto);
             }
         }

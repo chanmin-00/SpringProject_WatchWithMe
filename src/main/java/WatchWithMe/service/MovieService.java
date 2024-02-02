@@ -1,8 +1,11 @@
 package WatchWithMe.service;
 
 import WatchWithMe.domain.*;
-import WatchWithMe.dto.request.MovieListRequestDto;
-import WatchWithMe.dto.response.MovieListResponseDto;
+import WatchWithMe.dto.request.movie.MovieListRequestDto;
+import WatchWithMe.dto.response.movie.MoviePageResponseDto;
+import WatchWithMe.dto.response.movie.MovieResponseDto;
+import WatchWithMe.global.exception.GlobalException;
+import WatchWithMe.global.exception.code.GlobalErrorCode;
 import WatchWithMe.repository.actor.ActorRepository;
 import WatchWithMe.repository.director.DirectorRepository;
 import WatchWithMe.repository.MovieActorRepository;
@@ -11,6 +14,10 @@ import WatchWithMe.repository.movie.MovieRepository;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -156,13 +163,39 @@ public class MovieService {
         }
     }
 
-    // 영화 조회(영화명, 영화 장르, 개봉 연도, 평점)
-    public List<MovieListResponseDto> searchMovieList(MovieListRequestDto movieListRequestDto){
-        List<MovieListResponseDto> movieListResponseDtoList = new ArrayList<>();
+    // 영화 단건(id) 조회
+    public MovieResponseDto getMovieById(Long movieId) {
+
+        Movie movie = movieRepository.findById(movieId).orElse(null);
+        if (movie == null)
+            throw new GlobalException(GlobalErrorCode._NO_CONTENTS);
+
+        return new MovieResponseDto(movie);
+    }
+
+    // 영화 목록 전체 조회, 페이징 기능 구현
+    public MoviePageResponseDto getMovieList(int page) {
+
+        List<Sort.Order> sort = new ArrayList<>();
+        page = page - 1; // page, 0부터 시작
+
+        sort.add(Sort.Order.desc("createdAt")); // 최신 영화 기준 정렬 조건 추가
+        Pageable pageable = PageRequest.of(page, 2, Sort.by(sort));
+        Page<Movie> moviePage = movieRepository.findAll(pageable); // 조건에 따른 페이지 조회
+
+        if (moviePage.getContent().isEmpty())
+            throw new GlobalException(GlobalErrorCode._NO_CONTENTS); // 조회 내용이 없는 경우
+
+        return new MoviePageResponseDto(moviePage);
+    }
+
+    // 영화 조건 검색 (영화명, 영화 장르, 개봉 연도, 평점)
+    public List<MovieResponseDto> searchMovieList(MovieListRequestDto movieListRequestDto){
+        List<MovieResponseDto> movieListResponseDtoList = new ArrayList<>();
 
         List<Movie> movieList = movieRepository.search(movieListRequestDto);
         for(int i = 0; i < movieList.size(); i++){
-            MovieListResponseDto movieListResponseDto = new MovieListResponseDto(movieList.get(i));
+            MovieResponseDto movieListResponseDto = new MovieResponseDto(movieList.get(i));
             movieListResponseDtoList.add(movieListResponseDto);
         }
         return movieListResponseDtoList;

@@ -1,4 +1,4 @@
-package WatchWithMe.dto.request;
+package WatchWithMe.dto.request.movie;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;

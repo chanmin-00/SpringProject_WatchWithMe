@@ -1,7 +1,7 @@
 package WatchWithMe.repository.movie;
 
 import WatchWithMe.domain.Movie;
-import WatchWithMe.dto.request.MovieListRequestDto;
+import WatchWithMe.dto.request.movie.MovieListRequestDto;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
