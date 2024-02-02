@@ -2,7 +2,6 @@ package WatchWithMe.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -10,7 +9,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Member extends BaseEntity{
+public class Member extends BaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_id")

@@ -1,7 +1,7 @@
 package WatchWithMe.controller;
 
-import WatchWithMe.dto.request.LoginRequestDto;
-import WatchWithMe.dto.request.SignUpRequestDto;
+import WatchWithMe.dto.request.member.LoginRequestDto;
+import WatchWithMe.dto.request.member.SignUpRequestDto;
 import WatchWithMe.dto.response.LoginResponseDto;
 import WatchWithMe.global.response.ApiResponse;
 import WatchWithMe.service.member.MemberService;
@@ -32,7 +32,7 @@ public class MemberController {
 
 
     /*
-     회원가입 처리
+     회원 가입 처리
      */
     @PostMapping
     public ApiResponse<Long> join(@RequestBody @Valid SignUpRequestDto signUpRequestDto) {

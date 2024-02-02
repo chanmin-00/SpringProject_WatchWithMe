@@ -1,14 +1,16 @@
-package WatchWithMe.dto.response;
+package WatchWithMe.dto.response.movie;
 
 import WatchWithMe.domain.Movie;
+import WatchWithMe.dto.response.MovieActorResponseDto;
+import WatchWithMe.dto.response.MovieDirectorResponseDto;
 import lombok.Getter;
-import lombok.Setter;
+import lombok.NoArgsConstructor;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Getter
-@Setter
-public class MovieListResponseDto {
+@NoArgsConstructor
+public class MovieResponseDto {
 
     private Long movieId; // movieId
 
@@ -23,7 +25,7 @@ public class MovieListResponseDto {
     private List<MovieActorResponseDto> movieActorDtoList; // 영화 배우 리스트
     private List<MovieDirectorResponseDto> movieDirectorDtoList; // 영화 배우 리스트
 
-    public MovieListResponseDto(Movie movie) {
+    public MovieResponseDto(Movie movie) {
         this.movieId = movie.getMovieId();
         this.title = movie.getTitle();
         this.openYear = movie.getOpenYear();
@@ -36,4 +38,6 @@ public class MovieListResponseDto {
                 .map(MovieDirectorResponseDto::new)
                 .collect(Collectors.toList());
     }
+
+
 }

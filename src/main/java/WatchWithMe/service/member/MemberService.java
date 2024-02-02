@@ -2,7 +2,7 @@ package WatchWithMe.service.member;
 
 import WatchWithMe.domain.Member;
 import WatchWithMe.domain.Review;
-import WatchWithMe.dto.request.SignUpRequestDto;
+import WatchWithMe.dto.request.member.SignUpRequestDto;
 import WatchWithMe.dto.response.LoginResponseDto;
 import WatchWithMe.global.config.jwt.TokenProvider;
 import WatchWithMe.global.exception.GlobalException;
