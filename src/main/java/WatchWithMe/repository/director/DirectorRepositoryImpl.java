@@ -5,6 +5,8 @@ import WatchWithMe.dto.request.DirectorListRequestDto;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+
 import java.util.List;
 import static WatchWithMe.domain.QDirector.director;
 
@@ -14,9 +16,12 @@ public class DirectorRepositoryImpl implements DirectorRepositoryCustom{
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public List<Director> search(DirectorListRequestDto directorListRequestDto){
+    public List<Director> search(DirectorListRequestDto directorListRequestDto, Pageable pageable){
         return queryFactory.select(director).from(director)
-                .where(directorNameEq(directorListRequestDto.getName())).fetch();
+                .where(directorNameEq(directorListRequestDto.getName()))
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
     }
 
     private BooleanExpression directorNameEq(String name){

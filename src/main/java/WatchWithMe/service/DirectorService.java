@@ -5,6 +5,9 @@ import WatchWithMe.dto.request.DirectorListRequestDto;
 import WatchWithMe.dto.response.movie.MovieResponseDto;
 import WatchWithMe.repository.director.DirectorRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,10 +19,16 @@ public class DirectorService {
     private final DirectorRepository directorRepository;
 
     // 감독별 영화 조회
-    public List<MovieResponseDto> searchMovieListByDirector(DirectorListRequestDto directorListRequestDto){
+    public List<MovieResponseDto> searchMovieListByDirector(DirectorListRequestDto directorListRequestDto, int page){
         List<MovieResponseDto> movieListResponseDtoList = new ArrayList<>();
 
-        List<Director> directorList = directorRepository.search(directorListRequestDto);
+        List<Sort.Order> sort = new ArrayList<>();
+        page = page - 1; // page, 0부터 시작
+
+        sort.add(Sort.Order.desc("directorId")); // 최신 영화 기준 정렬 조건 추가
+        Pageable pageable = PageRequest.of(page, 2, Sort.by(sort));
+
+        List<Director> directorList = directorRepository.search(directorListRequestDto, pageable);
         for(int i = 0;i < directorList.size();i++){
             Director director = directorList.get(i);
             List<MovieDirector> movieDirectorList = director.getMovieDirectorList();
