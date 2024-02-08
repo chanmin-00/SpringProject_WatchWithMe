@@ -32,12 +32,12 @@ public class ReviewController {
     }
 
     @GetMapping("/searchByMember/{memberId}")
-    public ApiResponse searchByMember(@PathVariable Long memberId){
-        return ApiResponse.onSuccess("리뷰 조회에 성공하였습니다", reviewService.findReviewListByMemberId(memberId));
+    public ApiResponse searchByMember(@PathVariable Long memberId, @RequestParam(value="page", defaultValue="1") int page){
+        return ApiResponse.onSuccess("리뷰 조회에 성공하였습니다", reviewService.findReviewListByMemberId(memberId, page));
     }
 
     @GetMapping("/searchByMovie/{movieId}")
-    public ApiResponse searchByMovie(@PathVariable Long movieId){
-        return ApiResponse.onSuccess("리뷰 조회에 성공하였습니다", reviewService.findReviewListByMovieId(movieId));
+    public ApiResponse searchByMovie(@PathVariable Long movieId, @RequestParam(value="page", defaultValue="1") int page){
+        return ApiResponse.onSuccess("리뷰 조회에 성공하였습니다", reviewService.findReviewListByMovieId(movieId, page));
     }
 }

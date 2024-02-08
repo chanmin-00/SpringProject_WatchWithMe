@@ -5,6 +5,8 @@ import WatchWithMe.dto.request.ActorListRequestDto;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+
 import java.util.List;
 import static WatchWithMe.domain.QActor.actor;
 
@@ -14,9 +16,12 @@ public class ActorRepositoryImpl implements ActorRepositoryCustom{
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public List<Actor> search(ActorListRequestDto actorListRequestDto){
+    public List<Actor> search(ActorListRequestDto actorListRequestDto, Pageable pageable){
         return queryFactory.select(actor).from(actor)
-                .where(actorNameEq(actorListRequestDto.getName())).fetch();
+                .where(actorNameEq(actorListRequestDto.name()))
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
     }
 
     private BooleanExpression actorNameEq(String name){

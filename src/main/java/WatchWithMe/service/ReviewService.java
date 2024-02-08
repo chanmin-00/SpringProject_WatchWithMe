@@ -12,6 +12,9 @@ import WatchWithMe.repository.MemberRepository;
 import WatchWithMe.repository.review.ReviewRepository;
 import WatchWithMe.repository.movie.MovieRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
@@ -84,11 +87,17 @@ public class ReviewService {
     /*
     내가 쓴 리뷰 조회
      */
-    public List<ReviewResponseDto> findReviewListByMemberId(Long memberId){
+    public List<ReviewResponseDto> findReviewListByMemberId(Long memberId, int page){
 
         List<ReviewResponseDto> reviewResponseDtoList = new ArrayList<>();
 
-        List<Review> reviewList = reviewRepository.searchByMember(memberId);
+        List<Sort.Order> sort = new ArrayList<>();
+        page = page - 1; // page, 0부터 시작
+
+        sort.add(Sort.Order.desc("reviewId")); // 리뷰 ID 기준 정렬 조건 추가
+        Pageable pageable = PageRequest.of(page, 10, Sort.by(sort));
+
+        List<Review> reviewList = reviewRepository.searchByMember(memberId, pageable);
         for(int i = 0;i < reviewList.size();i++) {
             Review review = reviewList.get(i);
             ReviewResponseDto reviewResponseDto = new ReviewResponseDto(review);
@@ -101,11 +110,17 @@ public class ReviewService {
     /*
     영화 리뷰 조회
      */
-    public List<ReviewResponseDto> findReviewListByMovieId(Long movieId){
+    public List<ReviewResponseDto> findReviewListByMovieId(Long movieId, int page){
 
         List<ReviewResponseDto> reviewResponseDtoList = new ArrayList<>();
 
-        List<Review> reviewList = reviewRepository.searchByMovie(movieId);
+        List<Sort.Order> sort = new ArrayList<>();
+        page = page - 1; // page, 0부터 시작
+
+        sort.add(Sort.Order.desc("reviewId")); // 리뷰 ID 기준 정렬 조건 추가
+        Pageable pageable = PageRequest.of(page, 10, Sort.by(sort));
+
+        List<Review> reviewList = reviewRepository.searchByMovie(movieId, pageable);
         for(int i = 0;i < reviewList.size();i++) {
             Review review = reviewList.get(i);
             ReviewResponseDto reviewResponseDto = new ReviewResponseDto(review);

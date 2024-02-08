@@ -5,6 +5,7 @@ import WatchWithMe.repository.MemberRepository;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import java.util.List;
 import static WatchWithMe.domain.QReview.review;
 
@@ -15,19 +16,23 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom{
     private final MemberRepository memberRepository;
 
     @Override
-    public List<Review> searchByMember(Long memberId){
+    public List<Review> searchByMember(Long memberId, Pageable pageable){
 
         return queryFactory.select(review).from(review)
-                .where(reviewMemberEq(memberId)).fetch();
-
+                .where(reviewMemberEq(memberId))
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
     }
 
     @Override
-    public List<Review> searchByMovie(Long movieId){
+    public List<Review> searchByMovie(Long movieId, Pageable pageable){
 
         return queryFactory.select(review).from(review)
-                .where(reviewMovieEq(movieId)).fetch();
-
+                .where(reviewMovieEq(movieId))
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
     }
 
     private BooleanExpression reviewMemberEq(Long memberId){

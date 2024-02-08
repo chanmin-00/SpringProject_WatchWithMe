@@ -180,7 +180,7 @@ public class MovieService {
         page = page - 1; // page, 0부터 시작
 
         sort.add(Sort.Order.desc("createdAt")); // 최신 영화 기준 정렬 조건 추가
-        Pageable pageable = PageRequest.of(page, 2, Sort.by(sort));
+        Pageable pageable = PageRequest.of(page, 10, Sort.by(sort));
         Page<Movie> moviePage = movieRepository.findAll(pageable); // 조건에 따른 페이지 조회
 
         if (moviePage.getContent().isEmpty())
@@ -190,10 +190,16 @@ public class MovieService {
     }
 
     // 영화 조건 검색 (영화명, 영화 장르, 개봉 연도, 평점)
-    public List<MovieResponseDto> searchMovieList(MovieListRequestDto movieListRequestDto){
+    public List<MovieResponseDto> searchMovieList(MovieListRequestDto movieListRequestDto, int page){
         List<MovieResponseDto> movieListResponseDtoList = new ArrayList<>();
 
-        List<Movie> movieList = movieRepository.search(movieListRequestDto);
+        List<Sort.Order> sort = new ArrayList<>();
+        page = page - 1; // page, 0부터 시작
+
+        sort.add(Sort.Order.desc("createdAt")); // 최신 영화 기준 정렬 조건 추가
+        Pageable pageable = PageRequest.of(page, 10, Sort.by(sort));
+
+        List<Movie> movieList = movieRepository.search(movieListRequestDto, pageable);
         for(int i = 0; i < movieList.size(); i++){
             MovieResponseDto movieListResponseDto = new MovieResponseDto(movieList.get(i));
             movieListResponseDtoList.add(movieListResponseDto);

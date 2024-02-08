@@ -25,7 +25,7 @@ public class MovieController {
     영화 전체 조회, 페이징
      */
     @GetMapping("/findList")
-    public ApiResponse findMovieList(@RequestParam(value="page", defaultValue="0") int page) {
+    public ApiResponse findMovieList(@RequestParam(value="page", defaultValue="1") int page) {
         return ApiResponse.onSuccess("영화 목록 조회에 성공했습니다", movieService.getMovieList(page));
     }
 
@@ -33,7 +33,7 @@ public class MovieController {
     영화 조건 검색
      */
     @GetMapping("/search")
-    public ApiResponse search(@RequestBody MovieListRequestDto movieListRequestDto) {
-        return ApiResponse.onSuccess("영화 조건 검색에 성공했습니다", movieService.searchMovieList(movieListRequestDto));
+    public ApiResponse search(@RequestBody MovieListRequestDto movieListRequestDto, @RequestParam(value="page", defaultValue="1") int page) {
+        return ApiResponse.onSuccess("영화 조건 검색에 성공했습니다", movieService.searchMovieList(movieListRequestDto, page));
     }
 }
