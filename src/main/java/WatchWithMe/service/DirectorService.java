@@ -26,7 +26,7 @@ public class DirectorService {
         page = page - 1; // page, 0부터 시작
 
         sort.add(Sort.Order.desc("directorId")); // 최신 영화 기준 정렬 조건 추가
-        Pageable pageable = PageRequest.of(page, 2, Sort.by(sort));
+        Pageable pageable = PageRequest.of(page, 10, Sort.by(sort));
 
         List<Director> directorList = directorRepository.search(directorListRequestDto, pageable);
         for(int i = 0;i < directorList.size();i++){

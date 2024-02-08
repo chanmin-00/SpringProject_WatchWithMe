@@ -95,7 +95,7 @@ public class ReviewService {
         page = page - 1; // page, 0부터 시작
 
         sort.add(Sort.Order.desc("reviewId")); // 리뷰 ID 기준 정렬 조건 추가
-        Pageable pageable = PageRequest.of(page, 2, Sort.by(sort));
+        Pageable pageable = PageRequest.of(page, 10, Sort.by(sort));
 
         List<Review> reviewList = reviewRepository.searchByMember(memberId, pageable);
         for(int i = 0;i < reviewList.size();i++) {
@@ -118,7 +118,7 @@ public class ReviewService {
         page = page - 1; // page, 0부터 시작
 
         sort.add(Sort.Order.desc("reviewId")); // 리뷰 ID 기준 정렬 조건 추가
-        Pageable pageable = PageRequest.of(page, 2, Sort.by(sort));
+        Pageable pageable = PageRequest.of(page, 10, Sort.by(sort));
 
         List<Review> reviewList = reviewRepository.searchByMovie(movieId, pageable);
         for(int i = 0;i < reviewList.size();i++) {

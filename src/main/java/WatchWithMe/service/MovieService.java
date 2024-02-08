@@ -180,7 +180,7 @@ public class MovieService {
         page = page - 1; // page, 0부터 시작
 
         sort.add(Sort.Order.desc("createdAt")); // 최신 영화 기준 정렬 조건 추가
-        Pageable pageable = PageRequest.of(page, 2, Sort.by(sort));
+        Pageable pageable = PageRequest.of(page, 10, Sort.by(sort));
         Page<Movie> moviePage = movieRepository.findAll(pageable); // 조건에 따른 페이지 조회
 
         if (moviePage.getContent().isEmpty())
@@ -197,7 +197,7 @@ public class MovieService {
         page = page - 1; // page, 0부터 시작
 
         sort.add(Sort.Order.desc("createdAt")); // 최신 영화 기준 정렬 조건 추가
-        Pageable pageable = PageRequest.of(page, 2, Sort.by(sort));
+        Pageable pageable = PageRequest.of(page, 10, Sort.by(sort));
 
         List<Movie> movieList = movieRepository.search(movieListRequestDto, pageable);
         for(int i = 0; i < movieList.size(); i++){
