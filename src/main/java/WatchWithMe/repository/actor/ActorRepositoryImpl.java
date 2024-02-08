@@ -18,7 +18,7 @@ public class ActorRepositoryImpl implements ActorRepositoryCustom{
     @Override
     public List<Actor> search(ActorListRequestDto actorListRequestDto, Pageable pageable){
         return queryFactory.select(actor).from(actor)
-                .where(actorNameEq(actorListRequestDto.getName()))
+                .where(actorNameEq(actorListRequestDto.name()))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();

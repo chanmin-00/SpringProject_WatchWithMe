@@ -18,7 +18,7 @@ public class DirectorRepositoryImpl implements DirectorRepositoryCustom{
     @Override
     public List<Director> search(DirectorListRequestDto directorListRequestDto, Pageable pageable){
         return queryFactory.select(director).from(director)
-                .where(directorNameEq(directorListRequestDto.getName()))
+                .where(directorNameEq(directorListRequestDto.name()))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
