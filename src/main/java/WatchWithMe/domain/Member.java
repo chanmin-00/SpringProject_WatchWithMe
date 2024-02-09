@@ -2,6 +2,7 @@ package WatchWithMe.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -42,6 +43,19 @@ public class Member extends BaseEntity {
     public void setFavoriteGenre(List<String> favoriteGenre){
         this.favoriteGenre = favoriteGenre;
     }
+    public void addFavoriteActor(String favoriteActor) {
+        if (this.favoriteActor == null)
+            this.favoriteActor = new ArrayList<>();
+
+        this.favoriteActor.add(favoriteActor);
+    }
+    public void addFavoriteDirector(String favoriteDirector) {
+        if (this.favoriteDirector == null)
+            this.favoriteDirector = new ArrayList<>();
+
+        this.favoriteDirector.add(favoriteDirector);
+    }
+
 
     public enum Role {
         USER, ADMIN
