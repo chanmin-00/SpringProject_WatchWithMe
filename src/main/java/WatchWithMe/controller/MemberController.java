@@ -5,6 +5,7 @@ import WatchWithMe.dto.request.DirectorListRequestDto;
 import WatchWithMe.dto.request.member.LoginRequestDto;
 import WatchWithMe.dto.request.member.SignUpRequestDto;
 import WatchWithMe.dto.response.LoginResponseDto;
+import WatchWithMe.dto.response.MemberResponseDto;
 import WatchWithMe.global.response.ApiResponse;
 import WatchWithMe.service.member.MemberService;
 import jakarta.validation.Valid;
@@ -44,6 +45,14 @@ public class MemberController {
         memberId = memberService.save(signUpRequestDto);
         data = ApiResponse.onSuccess("회원가입에 성공하였습니다.", memberId);
         return data;
+    }
+
+    /*
+    사용자 정보 조회
+     */
+    @GetMapping("/get/{memberId}")
+    public ApiResponse<MemberResponseDto> getMember(@PathVariable Long memberId) {
+        return ApiResponse.onSuccess("사용자 정보 조회에 성공하였습니다", memberService.getMember(memberId));
     }
 
     /*
