@@ -41,6 +41,8 @@ public class Movie extends BaseEntity{
         return movie;
     }
 
+    public void setUserRating(Double userRating) { this.userRating = userRating; }
+
     public void addMovieActor(MovieActor movieActor) {
         this.movieActorList.add(movieActor);
     }

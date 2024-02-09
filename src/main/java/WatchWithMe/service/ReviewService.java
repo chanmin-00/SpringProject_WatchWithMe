@@ -46,6 +46,14 @@ public class ReviewService {
         if (movie == null)
             throw new GlobalException(GlobalErrorCode._BAD_REQUEST);
 
+        Double userRating = movie.getUserRating(); // 영화 평균 평점
+        int reviewListSize = movie.getReviewList().size(); // 영화별 리뷰 개수
+        if (userRating == null)
+            userRating = 0.0;
+
+        userRating = (userRating * reviewListSize + memberRating) / (reviewListSize + 1);
+        movie.setUserRating(userRating); // 영화 평균 평점 갱신
+
         Review review = Review.createReview(reviewText, memberRating, memberRatingGenre);
         review.setMember(member);
         review.setMovie(movie);
@@ -66,6 +74,20 @@ public class ReviewService {
         Review review = reviewRepository.findById(reviewId).orElse(null);
         if (review == null)
             throw new GlobalException(GlobalErrorCode._BAD_REQUEST);
+
+        Movie movie = movieRepository.findById(review.getMovie().getMovieId()).orElse(null);
+        if (movie == null)
+            throw new GlobalException(GlobalErrorCode._BAD_REQUEST);
+
+        Double prevMemberRating = review.getMemberRating(); // 수정되기 전 평점
+        Double userRating = movie.getUserRating(); // 영화 평균 평점
+        int reviewListSize = movie.getReviewList().size(); // 영화별 리뷰 개수
+        if (userRating == null)
+            userRating = 0.0;
+
+        userRating = (userRating * reviewListSize - prevMemberRating +  memberRating) / reviewListSize;
+        movie.setUserRating(userRating); // 영화 평균 평점 갱신
+
         review.changeReview(reviewText, memberRating, memberRatingGenre);
 
         reviewRepository.save(review);
@@ -80,6 +102,19 @@ public class ReviewService {
         Review review = reviewRepository.findById(reviewId).orElse(null);
         if (review == null)
             throw new GlobalException(GlobalErrorCode._BAD_REQUEST);
+
+        Movie movie = movieRepository.findById(review.getMovie().getMovieId()).orElse(null);
+        if (movie == null)
+            throw new GlobalException(GlobalErrorCode._BAD_REQUEST);
+
+        Double prevMemberRating = review.getMemberRating(); // 삭제 리뷰 평점
+        Double userRating = movie.getUserRating(); // 영화 평균 평점
+        int reviewListSize = movie.getReviewList().size(); // 영화별 리뷰 개수
+        if (userRating == null)
+            userRating = 0.0;
+
+        userRating = (userRating * reviewListSize - prevMemberRating) / (reviewListSize - 1);
+        movie.setUserRating(userRating); // 영화 평균 평점 갱신
 
         reviewRepository.delete(review);
     }
