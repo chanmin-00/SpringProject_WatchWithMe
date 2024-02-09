@@ -2,25 +2,23 @@ package WatchWithMe.dto.response;
 
 import WatchWithMe.domain.Review;
 import lombok.Getter;
-import lombok.Setter;
 
 @Getter
-@Setter
 public class ReviewResponseDto {
 
-    private String reviewText; // review 글
+    private final String reviewText; // review 글
 
-    private Double memberRating; // 평점
+    private final Double memberRating; // 평점
 
-    private String memberRatingGenre; // 사용자 평가 장르
+    private final String memberRatingGenre; // 사용자 평가 장르
 
-    private String title; // 영화 제목
+    private final String title; // 영화 제목
 
-    private String openYear; // 제작 연도
+    private final String openYear; // 제작 연도
 
-    private Double userRating; // 평균 평점
+    private final Double userRating; // 평균 평점
 
-    private String genre; // 장르
+    private final String genre; // 장르
 
     private String author; // 작성자
 
