@@ -1,5 +1,7 @@
 package WatchWithMe.controller;
 
+import WatchWithMe.dto.request.ActorListRequestDto;
+import WatchWithMe.dto.request.DirectorListRequestDto;
 import WatchWithMe.dto.request.member.LoginRequestDto;
 import WatchWithMe.dto.request.member.SignUpRequestDto;
 import WatchWithMe.dto.response.LoginResponseDto;
@@ -43,4 +45,30 @@ public class MemberController {
         data = ApiResponse.onSuccess("회원가입에 성공하였습니다.", memberId);
         return data;
     }
+
+    /*
+    선호 장르 업데이트
+    */
+    @PutMapping("/update/favoriteGenre/{memberId}")
+    public ApiResponse<Long> updateFavoriteGenre(@PathVariable Long memberId) {
+        return ApiResponse.onSuccess("선호 장르 업데이트에 성공하였습니다", memberService.updateFavoriteGenre(memberId));
+    }
+
+    /*
+    선호 배우 추가
+     */
+    @PutMapping("/add/favoriteActor/{memberId}")
+    public ApiResponse<Long> addFavoriteActor(@PathVariable Long memberId, @RequestBody ActorListRequestDto actorListRequestDto) {
+        return ApiResponse.onSuccess("선호 배우 추가에 성공하였습니다", memberService.addFavoriteActor(memberId, actorListRequestDto));
+    }
+
+    /*
+    선호 감독 추가
+     */
+    @PutMapping("/add/favoriteDirector/{memberId}")
+    public ApiResponse<Long> addFavoriteDirector(@PathVariable Long memberId, @RequestBody DirectorListRequestDto directorListRequestDto) {
+        return ApiResponse.onSuccess("선호 감독 추가에 성공하였습니다", memberService.addFavoriteDirector(memberId, directorListRequestDto));
+    }
+
+
 }

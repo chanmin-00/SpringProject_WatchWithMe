@@ -1,13 +1,19 @@
 package WatchWithMe.service.member;
 
+import WatchWithMe.domain.Actor;
+import WatchWithMe.domain.Director;
 import WatchWithMe.domain.Member;
 import WatchWithMe.domain.Review;
+import WatchWithMe.dto.request.ActorListRequestDto;
+import WatchWithMe.dto.request.DirectorListRequestDto;
 import WatchWithMe.dto.request.member.SignUpRequestDto;
 import WatchWithMe.dto.response.LoginResponseDto;
 import WatchWithMe.global.config.jwt.TokenProvider;
 import WatchWithMe.global.exception.GlobalException;
 import WatchWithMe.global.exception.code.GlobalErrorCode;
 import WatchWithMe.repository.MemberRepository;
+import WatchWithMe.repository.actor.ActorRepository;
+import WatchWithMe.repository.director.DirectorRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -24,6 +30,8 @@ import java.util.Map;
 public class MemberService {
 
     private final MemberRepository memberRepository;
+    private final ActorRepository actorRepository;
+    private final DirectorRepository directorRepository;
     private final PasswordEncoder passwordEncoder;
     private final TokenProvider tokenProvider;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
@@ -109,4 +117,35 @@ public class MemberService {
         return member.getMemberId();
     }
 
+    // 선호 배우 추가
+    public Long addFavoriteActor(Long memberId, ActorListRequestDto actorListRequestDto) {
+
+        Member member = memberRepository.findById(memberId).orElse(null);
+        if (member == null)
+            throw new GlobalException(GlobalErrorCode._ACCOUNT_NOT_FOUND);
+
+        Actor actor = actorRepository.findByName(actorListRequestDto.name()).orElse(null);
+        if (actor == null)
+            throw new GlobalException(GlobalErrorCode._NO_CONTENTS);
+
+        member.addFavoriteActor(actor.getName());
+        memberRepository.save(member);
+        return memberId;
+    }
+
+    // 선호 감독 추가
+    public Long addFavoriteDirector(Long memberId, DirectorListRequestDto directorListRequestDto) {
+
+        Member member = memberRepository.findById(memberId).orElse(null);
+        if (member == null)
+            throw new GlobalException(GlobalErrorCode._ACCOUNT_NOT_FOUND);
+
+        Director director = directorRepository.findByName(directorListRequestDto.name()).orElse(null);
+        if (director == null)
+            throw new GlobalException(GlobalErrorCode._NO_CONTENTS);
+
+        member.addFavoriteDirector(director.getName());
+        memberRepository.save(member);
+        return memberId;
+    }
 }
