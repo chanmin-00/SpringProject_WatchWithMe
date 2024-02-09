@@ -4,26 +4,24 @@ import WatchWithMe.domain.Movie;
 import WatchWithMe.dto.response.MovieActorResponseDto;
 import WatchWithMe.dto.response.MovieDirectorResponseDto;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Getter
-@NoArgsConstructor
 public class MovieResponseDto {
 
-    private Long movieId; // movieId
+    private final Long movieId; // movieId
 
-    private String title; // 영화명
+    private final String title; // 영화명
 
-    private String openYear; // 개봉 연도
+    private final String openYear; // 개봉 연도
 
-    private Double userRating; // 평점
+    private final Double userRating; // 평점
 
-    private String genre; // 장르
+    private final String genre; // 장르
 
-    private List<MovieActorResponseDto> movieActorDtoList; // 영화 배우 리스트
-    private List<MovieDirectorResponseDto> movieDirectorDtoList; // 영화 배우 리스트
+    private final List<MovieActorResponseDto> movieActorDtoList; // 영화 배우 리스트
+    private final List<MovieDirectorResponseDto> movieDirectorDtoList; // 영화 배우 리스트
 
     public MovieResponseDto(Movie movie) {
         this.movieId = movie.getMovieId();

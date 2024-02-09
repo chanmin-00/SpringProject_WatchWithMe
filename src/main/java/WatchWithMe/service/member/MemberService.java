@@ -8,6 +8,7 @@ import WatchWithMe.dto.request.ActorListRequestDto;
 import WatchWithMe.dto.request.DirectorListRequestDto;
 import WatchWithMe.dto.request.member.SignUpRequestDto;
 import WatchWithMe.dto.response.LoginResponseDto;
+import WatchWithMe.dto.response.MemberResponseDto;
 import WatchWithMe.global.config.jwt.TokenProvider;
 import WatchWithMe.global.exception.GlobalException;
 import WatchWithMe.global.exception.code.GlobalErrorCode;
@@ -86,6 +87,16 @@ public class MemberService {
 
         return true;
 
+    }
+
+    // 사용자 정보 조회
+    public MemberResponseDto getMember(Long memberId) {
+
+        Member member = memberRepository.findById(memberId).orElse(null);
+        if (member == null)
+            throw new GlobalException(GlobalErrorCode._ACCOUNT_NOT_FOUND);
+
+        return new MemberResponseDto(member);
     }
 
     // 선호 장르 목록 업데이트
