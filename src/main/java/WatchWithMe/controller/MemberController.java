@@ -21,9 +21,7 @@ public class MemberController {
 
     private final MemberService memberService;
 
-    /*
-     accessToken 발급
-     */
+    // accessToken 발급
     @PostMapping("/token")
     public ApiResponse<LoginResponseDto> authorize(@RequestBody @Valid LoginRequestDto loginRequestDto) {
         ApiResponse<LoginResponseDto> data;
@@ -34,9 +32,7 @@ public class MemberController {
     }
 
 
-    /*
-     회원 가입 처리
-     */
+    // 회원 가입 처리
     @PostMapping
     public ApiResponse<Long> join(@RequestBody @Valid SignUpRequestDto signUpRequestDto) {
         Long memberId;
@@ -47,33 +43,25 @@ public class MemberController {
         return data;
     }
 
-    /*
-    사용자 정보 조회
-     */
+    // 사용자 정보 조회
     @GetMapping("/get/{memberId}")
     public ApiResponse<MemberResponseDto> getMember(@PathVariable Long memberId) {
         return ApiResponse.onSuccess("사용자 정보 조회에 성공하였습니다", memberService.getMember(memberId));
     }
 
-    /*
-    선호 장르 업데이트
-    */
+    // 선호 장르 업데이트
     @PutMapping("/update/favoriteGenre/{memberId}")
     public ApiResponse<Long> updateFavoriteGenre(@PathVariable Long memberId) {
         return ApiResponse.onSuccess("선호 장르 업데이트에 성공하였습니다", memberService.updateFavoriteGenre(memberId));
     }
 
-    /*
-    선호 배우 추가
-     */
+    // 선호 배우 추가
     @PutMapping("/add/favoriteActor/{memberId}")
     public ApiResponse<Long> addFavoriteActor(@PathVariable Long memberId, @RequestBody ActorListRequestDto actorListRequestDto) {
         return ApiResponse.onSuccess("선호 배우 추가에 성공하였습니다", memberService.addFavoriteActor(memberId, actorListRequestDto));
     }
 
-    /*
-    선호 감독 추가
-     */
+    // 선호 감독 추가
     @PutMapping("/add/favoriteDirector/{memberId}")
     public ApiResponse<Long> addFavoriteDirector(@PathVariable Long memberId, @RequestBody DirectorListRequestDto directorListRequestDto) {
         return ApiResponse.onSuccess("선호 감독 추가에 성공하였습니다", memberService.addFavoriteDirector(memberId, directorListRequestDto));
