@@ -189,6 +189,38 @@ public class MovieService {
         return new MoviePageResponseDto(moviePage);
     }
 
+    // 영화 목록 전체 조회, 평점 높음 순 페이징 기능 구현
+    public MoviePageResponseDto getUserRatingDescMovieList(int page) {
+
+        List<Sort.Order> sort = new ArrayList<>();
+        page = page - 1; // page, 0부터 시작
+
+        sort.add(Sort.Order.desc("userRating")); // 상위 평점 기준 정렬 조건 추가
+        Pageable pageable = PageRequest.of(page, 10, Sort.by(sort));
+        Page<Movie> moviePage = movieRepository.findAll(pageable); // 조건에 따른 페이지 조회
+
+        if (moviePage.getContent().isEmpty())
+            throw new GlobalException(GlobalErrorCode._NO_CONTENTS); // 조회 내용이 없는 경우
+
+        return new MoviePageResponseDto(moviePage);
+    }
+
+    // 영화 목록 전체 조회, 평점 낮음 순 페이징 기능 구현
+    public MoviePageResponseDto getUserRatingAscMovieList(int page) {
+
+        List<Sort.Order> sort = new ArrayList<>();
+        page = page - 1; // page, 0부터 시작
+
+        sort.add(Sort.Order.asc("userRating")); // 하위 평점 기준 정렬 조건 추가
+        Pageable pageable = PageRequest.of(page, 10, Sort.by(sort));
+        Page<Movie> moviePage = movieRepository.findAll(pageable); // 조건에 따른 페이지 조회
+
+        if (moviePage.getContent().isEmpty())
+            throw new GlobalException(GlobalErrorCode._NO_CONTENTS); // 조회 내용이 없는 경우
+
+        return new MoviePageResponseDto(moviePage);
+    }
+
     // 영화 조건 검색 (영화명, 영화 장르, 개봉 연도, 평점)
     public List<MovieResponseDto> searchMovieList(MovieListRequestDto movieListRequestDto, int page){
         List<MovieResponseDto> movieListResponseDtoList = new ArrayList<>();
