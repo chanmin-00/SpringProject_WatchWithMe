@@ -13,6 +13,9 @@ public interface MovieRepository extends JpaRepository<Movie, Long>, MovieReposi
     // 영화명 and 개봉 연도 and 장르 기준 조회
     List<Movie> findByTitleAndOpenYearAndGenre(String title, String openYear, String genre);
 
+    // 장르 기준 조회
+    List<Movie> findByGenre(String genre);
+
     // 영화 전체 조회, 페이징 처리 메소드
     Page<Movie> findAll(Pageable pageable);
 }

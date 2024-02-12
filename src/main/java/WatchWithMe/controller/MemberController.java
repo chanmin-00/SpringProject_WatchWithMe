@@ -7,6 +7,7 @@ import WatchWithMe.dto.request.member.SignUpRequestDto;
 import WatchWithMe.dto.response.LoginResponseDto;
 import WatchWithMe.dto.response.MemberResponseDto;
 import WatchWithMe.global.response.ApiResponse;
+import WatchWithMe.service.RecommendMovieService;
 import WatchWithMe.service.member.MemberService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 public class MemberController {
 
     private final MemberService memberService;
+    private final RecommendMovieService recommendMovieService;
 
     // accessToken 발급
     @PostMapping("/token")
@@ -47,6 +49,12 @@ public class MemberController {
     @GetMapping("/get/{memberId}")
     public ApiResponse<MemberResponseDto> getMember(@PathVariable Long memberId) {
         return ApiResponse.onSuccess("사용자 정보 조회에 성공하였습니다", memberService.getMember(memberId));
+    }
+
+    // 사용자 기반 영화 추천 서비스
+    @GetMapping("recommend/movie/{memberId}")
+    public ApiResponse recommendMovie(@PathVariable Long memberId) {
+        return ApiResponse.onSuccess("영화 추천에 성공하였습니다", recommendMovieService.recommendMovie(memberId));
     }
 
     // 선호 장르 업데이트
