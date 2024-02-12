@@ -26,15 +26,21 @@ public class MovieController {
     }
 
     // 영화 전체 조회, 평점 높음 순 조회
-    @GetMapping("/find/RatingDescList")
-    public ApiResponse findUserRatingDescMovieList(@RequestParam(value="page", defaultValue="1") int page) {
+    @GetMapping("/find/ratingDescList")
+    public ApiResponse findRatingDescMovieList(@RequestParam(value="page", defaultValue="1") int page) {
         return ApiResponse.onSuccess("영화 목록 조회에 성공했습니다", movieService.getUserRatingDescMovieList(page));
     }
 
     // 영화 전체 조회, 평점 낮음 순 조회
-    @GetMapping("/find/RatingAscList")
-    public ApiResponse findUserRatingAscMovieList(@RequestParam(value="page", defaultValue="1") int page) {
+    @GetMapping("/find/ratingAscList")
+    public ApiResponse findRatingAscMovieList(@RequestParam(value="page", defaultValue="1") int page) {
         return ApiResponse.onSuccess("영화 목록 조회에 성공했습니다", movieService.getUserRatingAscMovieList(page));
+    }
+
+    // 영화 전체 조회, 리뷰 많음 순 조회
+    @GetMapping("/find/reviewMostList")
+    public ApiResponse findReviewMostList(@RequestParam(value = "page", defaultValue = "1") int page) {
+        return ApiResponse.onSuccess("영화 목록 조회에 성공했습니다", movieService.getReviewMostMovieList(page));
     }
 
     // 영화 조건 검색
