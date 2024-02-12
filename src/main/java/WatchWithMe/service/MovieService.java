@@ -221,9 +221,23 @@ public class MovieService {
         return new MoviePageResponseDto(moviePage);
     }
 
+    // 영화 목록 전체 조회, 리뷰 많음 순, 페이징 기능 구현
+    public MoviePageResponseDto getReviewMostMovieList(int page) {
+
+        page = page - 1; // page, 0부터 시작
+
+        Pageable pageable = PageRequest.of(page, 10);
+        Page<Movie> moviePage = movieRepository.findAllMostReview(pageable); // 조건에 따른 페이지 조회
+
+        if (moviePage.getContent().isEmpty())
+            throw new GlobalException(GlobalErrorCode._NO_CONTENTS); // 조회 내용이 없는 경우
+
+        return new MoviePageResponseDto(moviePage);
+    }
+
     // 영화 조건 검색 (영화명, 영화 장르, 개봉 연도, 평점)
     public List<MovieResponseDto> searchMovieList(MovieListRequestDto movieListRequestDto, int page){
-        List<MovieResponseDto> movieListResponseDtoList = new ArrayList<>();
+        List<MovieResponseDto> movieResponseDtoList = new ArrayList<>();
 
         List<Sort.Order> sort = new ArrayList<>();
         page = page - 1; // page, 0부터 시작
@@ -233,9 +247,9 @@ public class MovieService {
 
         List<Movie> movieList = movieRepository.search(movieListRequestDto, pageable);
         for(int i = 0; i < movieList.size(); i++){
-            MovieResponseDto movieListResponseDto = new MovieResponseDto(movieList.get(i));
-            movieListResponseDtoList.add(movieListResponseDto);
+            MovieResponseDto movieResponseDto = new MovieResponseDto(movieList.get(i));
+            movieResponseDtoList.add(movieResponseDto);
         }
-        return movieListResponseDtoList;
+        return movieResponseDtoList;
     }
 }
