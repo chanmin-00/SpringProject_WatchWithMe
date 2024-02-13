@@ -35,14 +35,26 @@ public class ReviewController {
     }
 
     // 내가 쓴 리뷰 조회
-    @GetMapping("/searchByMember/{memberId}")
-    public ApiResponse searchByMember(@PathVariable Long memberId, @RequestParam(value="page", defaultValue="1") int page){
+    @GetMapping("/findByMember/{memberId}")
+    public ApiResponse findByMember(@PathVariable Long memberId, @RequestParam(value="page", defaultValue="1") int page){
         return ApiResponse.onSuccess("리뷰 조회에 성공하였습니다", reviewService.findReviewListByMemberId(memberId, page));
     }
 
     // 영화별 리뷰 조회
-    @GetMapping("/searchByMovie/{movieId}")
-    public ApiResponse searchByMovie(@PathVariable Long movieId, @RequestParam(value="page", defaultValue="1") int page){
+    @GetMapping("/findByMovie/{movieId}")
+    public ApiResponse findByMovie(@PathVariable Long movieId, @RequestParam(value="page", defaultValue="1") int page){
         return ApiResponse.onSuccess("리뷰 조회에 성공하였습니다", reviewService.findReviewListByMovieId(movieId, page));
+    }
+
+    // 영화별 리뷰 조회, 평점 높음 순
+    @GetMapping("/findByMovie/ratingDesc/{movieId}")
+    public ApiResponse findByMovieRatingDesc(@PathVariable Long movieId, @RequestParam(value = "page", defaultValue = "1") int page) {
+        return ApiResponse.onSuccess("리뷰 조회에 성공하였습니다", reviewService.findReviewListByMovieIdRatingDesc(movieId, page));
+    }
+
+    // 영화별 리뷰 조회, 평점 낮음 순
+    @GetMapping("/findByMovie/ratingAsc/{movieId}")
+    public ApiResponse findByMovieRatingAsc(@PathVariable Long movieId, @RequestParam(value = "page", defaultValue = "1") int page) {
+        return ApiResponse.onSuccess("리뷰 조회에 성공하였습니다", reviewService.findReviewListByMovieIdRatingAsc(movieId, page));
     }
 }

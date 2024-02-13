@@ -14,7 +14,6 @@ import WatchWithMe.repository.movie.MovieRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,9 +26,7 @@ public class ReviewService {
     private final MemberRepository memberRepository;
     private final MovieRepository movieRepository;
 
-    /*
-    리뷰 DB 저장
-     */
+    // 리뷰 DB 저장
     public Long write(WriteReviewRequestDto writeReviewRequestDto){
 
         String email = writeReviewRequestDto.email();
@@ -62,9 +59,7 @@ public class ReviewService {
         return review.getReviewId();
     }
 
-    /*
-    리뷰 수정
-     */
+    // 리뷰 수정
     public Long change(Long reviewId, ChangeReviewRequestDto changeReviewRequestDto){
 
         String reviewText = changeReviewRequestDto.reviewText();
@@ -94,9 +89,7 @@ public class ReviewService {
         return review.getReviewId();
     }
 
-    /*
-    내가 쓴 리뷰 삭제
-     */
+    // 내가 쓴 리뷰 삭제
     public void delete(Long reviewId){
 
         Review review = reviewRepository.findById(reviewId).orElse(null);
@@ -119,18 +112,13 @@ public class ReviewService {
         reviewRepository.delete(review);
     }
 
-    /*
-    내가 쓴 리뷰 조회
-     */
+    // 내가 쓴 리뷰 조회
     public List<ReviewResponseDto> findReviewListByMemberId(Long memberId, int page){
 
         List<ReviewResponseDto> reviewResponseDtoList = new ArrayList<>();
 
-        List<Sort.Order> sort = new ArrayList<>();
         page = page - 1; // page, 0부터 시작
-
-        sort.add(Sort.Order.desc("reviewId")); // 리뷰 ID 기준 정렬 조건 추가
-        Pageable pageable = PageRequest.of(page, 10, Sort.by(sort));
+        Pageable pageable = PageRequest.of(page, 10);
 
         List<Review> reviewList = reviewRepository.searchByMember(memberId, pageable);
         for(int i = 0;i < reviewList.size();i++) {
@@ -142,18 +130,13 @@ public class ReviewService {
         return reviewResponseDtoList;
     }
 
-    /*
-    영화 리뷰 조회
-     */
+    // 영화 리뷰 조회
     public List<ReviewResponseDto> findReviewListByMovieId(Long movieId, int page){
 
         List<ReviewResponseDto> reviewResponseDtoList = new ArrayList<>();
 
-        List<Sort.Order> sort = new ArrayList<>();
         page = page - 1; // page, 0부터 시작
-
-        sort.add(Sort.Order.desc("reviewId")); // 리뷰 ID 기준 정렬 조건 추가
-        Pageable pageable = PageRequest.of(page, 10, Sort.by(sort));
+        Pageable pageable = PageRequest.of(page, 10);
 
         List<Review> reviewList = reviewRepository.searchByMovie(movieId, pageable);
         for(int i = 0;i < reviewList.size();i++) {
@@ -165,4 +148,39 @@ public class ReviewService {
         return reviewResponseDtoList;
     }
 
+    // 영화 리뷰 조회, 평점 높음 순
+    public List<ReviewResponseDto> findReviewListByMovieIdRatingDesc(Long movieId, int page) {
+
+        List<ReviewResponseDto> reviewResponseDtoList = new ArrayList<>();
+
+        page = page - 1; // page, 0부터 시작
+        Pageable pageable = PageRequest.of(page, 10);
+
+        List<Review> reviewList = reviewRepository.searchByMovieRatingDesc(movieId, pageable);
+        for(int i = 0;i < reviewList.size();i++) {
+            Review review = reviewList.get(i);
+            ReviewResponseDto reviewResponseDto = new ReviewResponseDto(review);
+            reviewResponseDtoList.add(reviewResponseDto);
+        }
+
+        return reviewResponseDtoList;
+    }
+
+    // 영화 리뷰 조회, 평점 낮음 순
+    public List<ReviewResponseDto> findReviewListByMovieIdRatingAsc(Long movieId, int page) {
+
+        List<ReviewResponseDto> reviewResponseDtoList = new ArrayList<>();
+
+        page = page - 1; // page, 0부터 시작
+        Pageable pageable = PageRequest.of(page, 10);
+
+        List<Review> reviewList = reviewRepository.searchByMovieRatingAsc(movieId, pageable);
+        for(int i = 0;i < reviewList.size();i++) {
+            Review review = reviewList.get(i);
+            ReviewResponseDto reviewResponseDto = new ReviewResponseDto(review);
+            reviewResponseDtoList.add(reviewResponseDto);
+        }
+
+        return reviewResponseDtoList;
+    }
 }

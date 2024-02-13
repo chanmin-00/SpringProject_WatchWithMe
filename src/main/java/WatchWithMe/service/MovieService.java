@@ -239,11 +239,8 @@ public class MovieService {
     public List<MovieResponseDto> searchMovieList(MovieListRequestDto movieListRequestDto, int page){
         List<MovieResponseDto> movieResponseDtoList = new ArrayList<>();
 
-        List<Sort.Order> sort = new ArrayList<>();
         page = page - 1; // page, 0부터 시작
-
-        sort.add(Sort.Order.desc("createdAt")); // 최신 영화 기준 정렬 조건 추가
-        Pageable pageable = PageRequest.of(page, 10, Sort.by(sort));
+        Pageable pageable = PageRequest.of(page, 10);
 
         List<Movie> movieList = movieRepository.search(movieListRequestDto, pageable);
         for(int i = 0; i < movieList.size(); i++){

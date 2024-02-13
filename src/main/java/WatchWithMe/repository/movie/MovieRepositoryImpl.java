@@ -21,6 +21,7 @@ public class MovieRepositoryImpl implements MovieRepositoryCustom {
                         movieOpenYearEq(movieListRequestDto.openYear()),
                         movieGenreEq(movieListRequestDto.genre()),
                         movieUserRatingBetween(movieListRequestDto.userRatingHigh(), movieListRequestDto.userRatingLow()))
+                        .orderBy(movie.createdAt.desc())
                         .offset(pageable.getOffset())
                         .limit(pageable.getPageSize())
                         .fetch();

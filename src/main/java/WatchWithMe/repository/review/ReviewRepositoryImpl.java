@@ -20,6 +20,7 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom{
 
         return queryFactory.select(review).from(review)
                 .where(reviewMemberEq(memberId))
+                .orderBy(review.reviewId.desc()) // 리뷰 id 내림차순 정렬
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
@@ -30,6 +31,30 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom{
 
         return queryFactory.select(review).from(review)
                 .where(reviewMovieEq(movieId))
+                .orderBy(review.reviewId.desc()) // 리뷰 id 내림차순 정렬
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+    }
+
+    // 리뷰 평점 높음순 조회
+    @Override
+    public List<Review> searchByMovieRatingDesc(Long movieId, Pageable pageable){
+
+        return queryFactory.select(review).from(review)
+                .where(reviewMovieEq(movieId))
+                .orderBy(review.memberRating.desc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+    }
+
+    // 리뷰 평점 낮음순 조회
+    public List<Review> searchByMovieRatingAsc(Long movieId, Pageable pageable) {
+
+        return queryFactory.select(review).from(review)
+                .where(reviewMovieEq(movieId))
+                .orderBy(review.memberRating.asc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
