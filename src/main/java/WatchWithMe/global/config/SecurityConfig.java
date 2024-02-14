@@ -46,7 +46,11 @@ public class SecurityConfig {
                     c.requestMatchers("/api/v1/member",
                                     "/api/v1/member/token",
                                     "/api/v1/member/login",
-                                    "/api/v1/member/exists/**").permitAll()
+                                    "/api/v1/member/exists/**",
+                                    "/v3/api-docs/**",
+                                    "/swagger-ui/**",
+                                    "/swagger-ui.html"
+                                    ).permitAll()
                             .requestMatchers("/api/v1/admin/**").hasAuthority("ADMIN")
                             .anyRequest().authenticated();
                 });
