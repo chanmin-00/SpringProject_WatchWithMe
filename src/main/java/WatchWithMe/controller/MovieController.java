@@ -4,6 +4,7 @@ import WatchWithMe.dto.request.movie.MovieListRequestDto;
 import WatchWithMe.global.response.ApiResponse;
 import WatchWithMe.service.MovieService;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -50,9 +51,9 @@ public class MovieController {
     }
 
     // 영화 조건 검색
-    @GetMapping("/search")
+    @PostMapping("/search")
     @Operation(summary = "영화 조건 검색", description = "다양한 조건(영화명, 장르, 개봉 연도 등)으로 영화 검색")
-    public ApiResponse search(@RequestBody MovieListRequestDto movieListRequestDto, @RequestParam(value="page", defaultValue="1") int page) {
+    public ApiResponse searchByCondition(@Valid @RequestBody MovieListRequestDto movieListRequestDto, @RequestParam(value="page", defaultValue="1") int page) {
         return ApiResponse.onSuccess("영화 조건 검색에 성공했습니다", movieService.searchMovieList(movieListRequestDto, page));
     }
 }
