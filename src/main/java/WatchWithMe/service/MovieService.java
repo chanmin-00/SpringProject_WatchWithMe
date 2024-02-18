@@ -296,4 +296,136 @@ public class MovieService {
         }
         return movieResponseDtoList;
     }
+
+    // 영화 조건 검색 (영화명, 영화 장르, 개봉 연도, 평점), 평점 높음순
+    public List<MovieResponseDto> searchMovieListRatingDesc(MovieListRequestDto movieListRequestDto, int page){
+        List<MovieResponseDto> movieResponseDtoList = new ArrayList<>();
+
+        page = page - 1; // page, 0부터 시작
+        Pageable pageable = PageRequest.of(page, 10);
+
+        // 배우 이름으로 검색된 경우
+        Actor actor = actorRepository.findByName(movieListRequestDto.titleOrActorOrDirector()).orElse(null);
+        if (actor != null) {
+            List<MovieActor> movieActorList = actor.getMovieActorList();
+            for (MovieActor movieActor : movieActorList) {
+                Movie movie = movieActor.getMovie();
+
+                if (!(movie.getOpenYear().equals(movieListRequestDto.openYear()) || movieListRequestDto.openYear() == null))// 개봉 연도에 부합하지 않는 경우
+                    break;
+
+                if (!(movie.getGenre().equals(movieListRequestDto.openYear()) || movieListRequestDto.genre() == null))  // 장르에 부합하지 않는 경우
+                    break;
+
+                if (movieListRequestDto.userRatingLow() != null && movieListRequestDto.userRatingHigh() != null) {
+                    if (!(movieListRequestDto.userRatingLow() <= movie.getUserRating() && movieListRequestDto.userRatingHigh() >= movie.getUserRating()))
+                        break; // 평점 조건에 부합하지 앟는 경우
+                }
+
+                MovieResponseDto movieResponseDto = new MovieResponseDto(movie);
+                movieResponseDtoList.add(movieResponseDto);
+            }
+        }
+
+        // 감독 이름으로 검색된 경우
+        Director director = directorRepository.findByName(movieListRequestDto.titleOrActorOrDirector()).orElse(null);
+        if (director != null) {
+            List<MovieDirector> movieDirectorList = director.getMovieDirectorList();
+            for (MovieDirector movieDirector : movieDirectorList) {
+                Movie movie = movieDirector.getMovie();
+
+                if (!(movie.getOpenYear().equals(movieListRequestDto.openYear()) || movieListRequestDto.openYear() == null))// 개봉 연도에 부합하지 않는 경우
+                    break;
+
+                if (!(movie.getGenre().equals(movieListRequestDto.openYear()) || movieListRequestDto.genre() == null))  // 장르에 부합하지 않는 경우
+                    break;
+
+                if (movieListRequestDto.userRatingLow() != null && movieListRequestDto.userRatingHigh() != null) {
+                    if (!(movieListRequestDto.userRatingLow() <= movie.getUserRating() && movieListRequestDto.userRatingHigh() >= movie.getUserRating()))
+                        break; // 평점 조건에 부합하지 앟는 경우
+                }
+
+                MovieResponseDto movieResponseDto = new MovieResponseDto(movie);
+                movieResponseDtoList.add(movieResponseDto);
+            }
+        }
+
+        // 영화명으로 검색된 경우
+        List<Movie> movieList = movieRepository.search(movieListRequestDto, pageable);
+        for(int i = 0; i < movieList.size(); i++){
+            MovieResponseDto movieResponseDto = new MovieResponseDto(movieList.get(i));
+            movieResponseDtoList.add(movieResponseDto);
+        }
+
+        // 평점 높은순으로 정렬
+        movieResponseDtoList.sort(MovieResponseDto.userRatingComparator.reversed());
+
+        return movieResponseDtoList;
+    }
+
+    // 영화 조건 검색 (영화명, 영화 장르, 개봉 연도, 평점), 평점 낮음순
+    public List<MovieResponseDto> searchMovieListRatingAsc(MovieListRequestDto movieListRequestDto, int page){
+        List<MovieResponseDto> movieResponseDtoList = new ArrayList<>();
+
+        page = page - 1; // page, 0부터 시작
+        Pageable pageable = PageRequest.of(page, 10);
+
+        // 배우 이름으로 검색된 경우
+        Actor actor = actorRepository.findByName(movieListRequestDto.titleOrActorOrDirector()).orElse(null);
+        if (actor != null) {
+            List<MovieActor> movieActorList = actor.getMovieActorList();
+            for (MovieActor movieActor : movieActorList) {
+                Movie movie = movieActor.getMovie();
+
+                if (!(movie.getOpenYear().equals(movieListRequestDto.openYear()) || movieListRequestDto.openYear() == null))// 개봉 연도에 부합하지 않는 경우
+                    break;
+
+                if (!(movie.getGenre().equals(movieListRequestDto.openYear()) || movieListRequestDto.genre() == null))  // 장르에 부합하지 않는 경우
+                    break;
+
+                if (movieListRequestDto.userRatingLow() != null && movieListRequestDto.userRatingHigh() != null) {
+                    if (!(movieListRequestDto.userRatingLow() <= movie.getUserRating() && movieListRequestDto.userRatingHigh() >= movie.getUserRating()))
+                        break; // 평점 조건에 부합하지 앟는 경우
+                }
+
+                MovieResponseDto movieResponseDto = new MovieResponseDto(movie);
+                movieResponseDtoList.add(movieResponseDto);
+            }
+        }
+
+        // 감독 이름으로 검색된 경우
+        Director director = directorRepository.findByName(movieListRequestDto.titleOrActorOrDirector()).orElse(null);
+        if (director != null) {
+            List<MovieDirector> movieDirectorList = director.getMovieDirectorList();
+            for (MovieDirector movieDirector : movieDirectorList) {
+                Movie movie = movieDirector.getMovie();
+
+                if (!(movie.getOpenYear().equals(movieListRequestDto.openYear()) || movieListRequestDto.openYear() == null))// 개봉 연도에 부합하지 않는 경우
+                    break;
+
+                if (!(movie.getGenre().equals(movieListRequestDto.openYear()) || movieListRequestDto.genre() == null))  // 장르에 부합하지 않는 경우
+                    break;
+
+                if (movieListRequestDto.userRatingLow() != null && movieListRequestDto.userRatingHigh() != null) {
+                    if (!(movieListRequestDto.userRatingLow() <= movie.getUserRating() && movieListRequestDto.userRatingHigh() >= movie.getUserRating()))
+                        break; // 평점 조건에 부합하지 앟는 경우
+                }
+
+                MovieResponseDto movieResponseDto = new MovieResponseDto(movie);
+                movieResponseDtoList.add(movieResponseDto);
+            }
+        }
+
+        // 영화명으로 검색된 경우
+        List<Movie> movieList = movieRepository.search(movieListRequestDto, pageable);
+        for(int i = 0; i < movieList.size(); i++){
+            MovieResponseDto movieResponseDto = new MovieResponseDto(movieList.get(i));
+            movieResponseDtoList.add(movieResponseDto);
+        }
+
+        // 평점 높은순으로 정렬
+        movieResponseDtoList.sort(MovieResponseDto.userRatingComparator);
+
+        return movieResponseDtoList;
+    }
 }

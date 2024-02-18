@@ -56,4 +56,18 @@ public class MovieController {
     public ApiResponse searchByCondition(@Valid @RequestBody MovieListRequestDto movieListRequestDto, @RequestParam(value="page", defaultValue="1") int page) {
         return ApiResponse.onSuccess("영화 조건 검색에 성공했습니다", movieService.searchMovieList(movieListRequestDto, page));
     }
+
+    // 영화 조건 검색, 평점 높음순
+    @PostMapping("/search/ratingDesc")
+    @Operation(summary = "영화 조건 검색, 평점 높음순", description = "다양한 조건(영화명, 장르, 개봉 연도 등)으로 영화 검색")
+    public ApiResponse searchByConditionRatingDesc(@Valid @RequestBody MovieListRequestDto movieListRequestDto, @RequestParam(value="page", defaultValue="1") int page) {
+        return ApiResponse.onSuccess("영화 조건 검색에 성공했습니다", movieService.searchMovieListRatingDesc(movieListRequestDto, page));
+    }
+
+    // 영화 조건 검색, 평점 낮음순
+    @PostMapping("/search/ratingAsc")
+    @Operation(summary = "영화 조건 검색, 평점 낮음순", description = "다양한 조건(영화명, 장르, 개봉 연도 등)으로 영화 검색")
+    public ApiResponse searchByConditionRatingAsc(@Valid @RequestBody MovieListRequestDto movieListRequestDto, @RequestParam(value="page", defaultValue="1") int page) {
+        return ApiResponse.onSuccess("영화 조건 검색에 성공했습니다", movieService.searchMovieListRatingAsc(movieListRequestDto, page));
+    }
 }

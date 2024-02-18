@@ -4,6 +4,7 @@ import WatchWithMe.domain.Movie;
 import WatchWithMe.dto.response.MovieActorResponseDto;
 import WatchWithMe.dto.response.MovieDirectorResponseDto;
 import lombok.Getter;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -37,5 +38,11 @@ public class MovieResponseDto {
                 .collect(Collectors.toList());
     }
 
+    // 평점 비교
+    public static Comparator<MovieResponseDto> userRatingComparator
+            = Comparator.comparingDouble(
+            movieResponseDto -> movieResponseDto.getUserRating() != null ?
+                    movieResponseDto.getUserRating() : Double.MIN_VALUE
+    );
 
 }
