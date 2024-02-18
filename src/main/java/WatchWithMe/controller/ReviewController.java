@@ -41,28 +41,28 @@ public class ReviewController {
     // 내가 쓴 리뷰 조회
     @GetMapping("/findByMember/{memberId}")
     @Operation(summary = "자신이 쓴 리뷰 조회", description = "조회 페이지 입력  필요")
-    public ApiResponse findByMember(@PathVariable Long memberId, @RequestParam(value="page", defaultValue="1") int page){
+    public ApiResponse findByMember(@PathVariable Long memberId,@Valid @RequestParam(value="page", defaultValue="1") int page){
         return ApiResponse.onSuccess("리뷰 조회에 성공하였습니다", reviewService.findReviewListByMemberId(memberId, page));
     }
 
     // 영화별 리뷰 조회
     @GetMapping("/findByMovie/{movieId}")
     @Operation(summary = "영화 리뷰 조회", description = "조회 페이지 입력  필요")
-    public ApiResponse findByMovie(@PathVariable Long movieId, @RequestParam(value="page", defaultValue="1") int page){
+    public ApiResponse findByMovie(@PathVariable Long movieId,@Valid  @RequestParam(value="page", defaultValue="1") int page){
         return ApiResponse.onSuccess("리뷰 조회에 성공하였습니다", reviewService.findReviewListByMovieId(movieId, page));
     }
 
     // 영화별 리뷰 조회, 평점 높음 순
     @GetMapping("/findByMovie/ratingDesc/{movieId}")
     @Operation(summary = "영화 리뷰 조회, 높은 평점순", description = "조회 페이지 입력  필요")
-    public ApiResponse findByMovieRatingDesc(@PathVariable Long movieId, @RequestParam(value = "page", defaultValue = "1") int page) {
+    public ApiResponse findByMovieRatingDesc(@PathVariable Long movieId,@Valid  @RequestParam(value = "page", defaultValue = "1") int page) {
         return ApiResponse.onSuccess("리뷰 조회에 성공하였습니다", reviewService.findReviewListByMovieIdRatingDesc(movieId, page));
     }
 
     // 영화별 리뷰 조회, 평점 낮음 순
     @GetMapping("/findByMovie/ratingAsc/{movieId}")
     @Operation(summary = "영화 리뷰 조회, 낮은 평점순", description = "조회 페이지 입력  필요")
-    public ApiResponse findByMovieRatingAsc(@PathVariable Long movieId, @RequestParam(value = "page", defaultValue = "1") int page) {
+    public ApiResponse findByMovieRatingAsc(@PathVariable Long movieId,@Valid  @RequestParam(value = "page", defaultValue = "1") int page) {
         return ApiResponse.onSuccess("리뷰 조회에 성공하였습니다", reviewService.findReviewListByMovieIdRatingAsc(movieId, page));
     }
 }
