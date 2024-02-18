@@ -18,7 +18,7 @@ public class DirectorController {
     // 영화 감독별 영화 검색
     @PostMapping("/search")
     @Operation(summary = "감독 영화 검색", description = "감독명 입력 필요")
-    public ApiResponse search(@Valid @RequestBody DirectorListRequestDto directorListRequestDto, @RequestParam(value="page", defaultValue="1") int page) {
+    public ApiResponse search(@Valid @RequestBody DirectorListRequestDto directorListRequestDto, @Valid @RequestParam(value="page", defaultValue="1") int page) {
         return ApiResponse.onSuccess("영화 조건 검색에 성공했습니다", directorService.searchMovieListByDirector(directorListRequestDto, page));
     }
 }
