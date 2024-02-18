@@ -1,20 +1,16 @@
 package WatchWithMe.dto.request.movie;
 
-import jakarta.validation.constraints.NotBlank;
+import jakarta.annotation.Nullable;
 
 public record MovieListRequestDto (
-        @NotBlank(message = "영화명을 입력해주세요")
-        String title, // 영화명
-
-        @NotBlank(message = "개봉 연도를 입력해주세요")
+        @Nullable
+        String titleOrActorOrDirector, // 영화명 또는 감독명 또는 배우명
+        @Nullable
         String openYear, // 개봉 연도
-
-        @NotBlank(message = "최고 평점을 입력해주세요")
+        @Nullable
         Integer userRatingHigh, // 최고 평점
-
-        @NotBlank(message = "최저 평점을 입력해주세요")
+        @Nullable
         Integer userRatingLow, // 최저 평점
-
-        @NotBlank(message = "장르를 입력해주세요")
+        @Nullable
         String genre // 장르
 ) {}

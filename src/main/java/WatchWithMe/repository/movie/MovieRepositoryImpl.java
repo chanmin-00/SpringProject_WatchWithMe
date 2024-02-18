@@ -14,10 +14,11 @@ public class MovieRepositoryImpl implements MovieRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
 
+    // 영화 제목으로 검색한 경우
     @Override
     public List<Movie> search(MovieListRequestDto movieListRequestDto, Pageable pageable){
         return queryFactory.
-                select(movie).from(movie).where(movieNameEq(movieListRequestDto.title()),
+                select(movie).from(movie).where(movieNameEq(movieListRequestDto.titleOrActorOrDirector()),
                         movieOpenYearEq(movieListRequestDto.openYear()),
                         movieGenreEq(movieListRequestDto.genre()),
                         movieUserRatingBetween(movieListRequestDto.userRatingHigh(), movieListRequestDto.userRatingLow()))
