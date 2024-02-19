@@ -1,6 +1,7 @@
 package WatchWithMe.controller;
 
 import WatchWithMe.dto.request.review.ChangeReviewRequestDto;
+import WatchWithMe.dto.request.review.SearchReviewRequestDto;
 import WatchWithMe.dto.request.review.WriteReviewRequestDto;
 import WatchWithMe.global.response.ApiResponse;
 import WatchWithMe.service.ReviewService;
@@ -64,5 +65,12 @@ public class ReviewController {
     @Operation(summary = "영화 리뷰 조회, 낮은 평점순", description = "조회 페이지 입력  필요")
     public ApiResponse findByMovieRatingAsc(@PathVariable Long movieId,@Valid  @RequestParam(value = "page", defaultValue = "1") int page) {
         return ApiResponse.onSuccess("리뷰 조회에 성공하였습니다", reviewService.findReviewListByMovieIdRatingAsc(movieId, page));
+    }
+
+    // 리뷰 조건 검색, 리뷰 텍스트 검색
+    @PostMapping("/search/reviewText")
+    @Operation(summary =  "리뷰 조건 검색, 리뷰 내용 검색", description = "리뷰 내용 검색을 위한 텍스트 입력 필요")
+    public ApiResponse searchReviewText(@Valid @RequestParam(value = "page", defaultValue = "1") int page, @Valid @RequestBody SearchReviewRequestDto searchReviewRequestDto) {
+        return ApiResponse.onSuccess("리뷰 조회에 성공하였습니다", reviewService.searchReviewText(searchReviewRequestDto, page));
     }
 }

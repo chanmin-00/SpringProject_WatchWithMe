@@ -1,9 +1,8 @@
 package WatchWithMe.service;
 
-import WatchWithMe.domain.Member;
-import WatchWithMe.domain.Movie;
-import WatchWithMe.domain.Review;
+import WatchWithMe.domain.*;
 import WatchWithMe.dto.request.review.ChangeReviewRequestDto;
+import WatchWithMe.dto.request.review.SearchReviewRequestDto;
 import WatchWithMe.dto.request.review.WriteReviewRequestDto;
 import WatchWithMe.dto.response.ReviewResponseDto;
 import WatchWithMe.global.exception.GlobalException;
@@ -15,8 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -120,7 +118,7 @@ public class ReviewService {
         page = page - 1; // page, 0부터 시작
         Pageable pageable = PageRequest.of(page, 10);
 
-        List<Review> reviewList = reviewRepository.searchByMember(memberId, pageable);
+        List<Review> reviewList = reviewRepository.findByMember(memberId, pageable);
         for(int i = 0;i < reviewList.size();i++) {
             Review review = reviewList.get(i);
             ReviewResponseDto reviewResponseDto = new ReviewResponseDto(review);
@@ -138,7 +136,7 @@ public class ReviewService {
         page = page - 1; // page, 0부터 시작
         Pageable pageable = PageRequest.of(page, 10);
 
-        List<Review> reviewList = reviewRepository.searchByMovie(movieId, pageable);
+        List<Review> reviewList = reviewRepository.findByMovie(movieId, pageable);
         for(int i = 0;i < reviewList.size();i++) {
             Review review = reviewList.get(i);
             ReviewResponseDto reviewResponseDto = new ReviewResponseDto(review);
@@ -156,7 +154,7 @@ public class ReviewService {
         page = page - 1; // page, 0부터 시작
         Pageable pageable = PageRequest.of(page, 10);
 
-        List<Review> reviewList = reviewRepository.searchByMovieRatingDesc(movieId, pageable);
+        List<Review> reviewList = reviewRepository.findByMovieRatingDesc(movieId, pageable);
         for(int i = 0;i < reviewList.size();i++) {
             Review review = reviewList.get(i);
             ReviewResponseDto reviewResponseDto = new ReviewResponseDto(review);
@@ -174,7 +172,7 @@ public class ReviewService {
         page = page - 1; // page, 0부터 시작
         Pageable pageable = PageRequest.of(page, 10);
 
-        List<Review> reviewList = reviewRepository.searchByMovieRatingAsc(movieId, pageable);
+        List<Review> reviewList = reviewRepository.findByMovieRatingAsc(movieId, pageable);
         for(int i = 0;i < reviewList.size();i++) {
             Review review = reviewList.get(i);
             ReviewResponseDto reviewResponseDto = new ReviewResponseDto(review);
@@ -182,5 +180,48 @@ public class ReviewService {
         }
 
         return reviewResponseDtoList;
+    }
+
+    // 리뷰 조건 검색, 리뷰 텍스트 검색
+    public List<ReviewResponseDto> searchReviewText(SearchReviewRequestDto searchReviewRequestDto, int page){
+
+        String searchText = searchReviewRequestDto.searchText();
+
+        List<ReviewResponseDto> reviewResponseDtoList = new ArrayList<>(); // 리턴값 리스트
+
+        List<String> searchTextCombinationList = new ArrayList<>(); // 검색어 조합 단어 리스트
+        String[] words = searchText.split("[\\s,]+"); // 검색어를 ","와 공백으로 구분
+        for (String word : words) {
+            if (word.length() >= 2) {
+                for (int i = 0; i < word.length() - 1; i++) {
+                    for (int j = i + 1; j <= word.length(); j++) {
+                        searchTextCombinationList.add(word.substring(i, j));
+                    }
+                }
+            }
+        }
+
+        searchTextCombinationList.sort(Comparator.comparing(String::length).reversed()); // 단어 길이순, 내림 차순 정렬
+        Map<Review, Long> reviewMap = new HashMap<>(); // 리뷰 중복 방지용 map
+        for (String word : searchTextCombinationList) {
+            List<Review> reviewList = reviewRepository.searchReviewText(word);
+
+            for (Review review : reviewList) {
+                if (!reviewMap.containsKey(review)) {
+                    reviewMap.put(review, 1L);
+                    ReviewResponseDto reviewResponseDto = new ReviewResponseDto(review);
+                    reviewResponseDtoList.add(reviewResponseDto);
+                }
+            }
+        }
+
+        if (reviewResponseDtoList.isEmpty())
+            throw new GlobalException(GlobalErrorCode._NO_CONTENTS);
+
+        int pageSize = 10; // 페이지 요소 개수
+        int startIndex = (page - 1) * pageSize; // 페이징 시작 인덱스
+        int endIndex = Math.min(startIndex + pageSize, reviewResponseDtoList.size()); // 페이징 끝 인덱스
+
+        return reviewResponseDtoList.subList(startIndex, endIndex); // 페이징 처리 후 리턴
     }
 }
