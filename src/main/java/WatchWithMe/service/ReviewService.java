@@ -113,30 +113,41 @@ public class ReviewService {
     // 내가 쓴 리뷰 조회
     public List<ReviewResponseDto> findReviewListByMemberId(Long memberId, int page){
 
-        List<ReviewResponseDto> reviewResponseDtoList = new ArrayList<>();
+        Member member = memberRepository.findById(memberId).orElse(null);
+        if (member == null)
+            throw new GlobalException(GlobalErrorCode._ACCOUNT_NOT_FOUND);
 
+        List<ReviewResponseDto> reviewResponseDtoList = new ArrayList<>();
         page = page - 1; // page, 0부터 시작
         Pageable pageable = PageRequest.of(page, 10);
 
         List<Review> reviewList = reviewRepository.findByMember(memberId, pageable);
+        if (reviewList.isEmpty())
+            throw new GlobalException(GlobalErrorCode._NO_CONTENTS);
+
         for(int i = 0;i < reviewList.size();i++) {
             Review review = reviewList.get(i);
             ReviewResponseDto reviewResponseDto = new ReviewResponseDto(review);
             reviewResponseDtoList.add(reviewResponseDto);
         }
-
         return reviewResponseDtoList;
     }
 
     // 영화 리뷰 조회
     public List<ReviewResponseDto> findReviewListByMovieId(Long movieId, int page){
 
-        List<ReviewResponseDto> reviewResponseDtoList = new ArrayList<>();
+        Movie movie = movieRepository.findById(movieId).orElse(null);
+        if (movie == null)
+            throw new GlobalException(GlobalErrorCode._BAD_REQUEST);
 
+        List<ReviewResponseDto> reviewResponseDtoList = new ArrayList<>();
         page = page - 1; // page, 0부터 시작
         Pageable pageable = PageRequest.of(page, 10);
 
         List<Review> reviewList = reviewRepository.findByMovie(movieId, pageable);
+        if (reviewList.isEmpty())
+            throw new GlobalException(GlobalErrorCode._NO_CONTENTS);
+
         for(int i = 0;i < reviewList.size();i++) {
             Review review = reviewList.get(i);
             ReviewResponseDto reviewResponseDto = new ReviewResponseDto(review);
@@ -149,12 +160,18 @@ public class ReviewService {
     // 영화 리뷰 조회, 평점 높음 순
     public List<ReviewResponseDto> findReviewListByMovieIdRatingDesc(Long movieId, int page) {
 
-        List<ReviewResponseDto> reviewResponseDtoList = new ArrayList<>();
+        Movie movie = movieRepository.findById(movieId).orElse(null);
+        if (movie == null)
+            throw new GlobalException(GlobalErrorCode._NO_CONTENTS);
 
+        List<ReviewResponseDto> reviewResponseDtoList = new ArrayList<>();
         page = page - 1; // page, 0부터 시작
         Pageable pageable = PageRequest.of(page, 10);
 
         List<Review> reviewList = reviewRepository.findByMovieRatingDesc(movieId, pageable);
+        if (reviewList.isEmpty())
+            throw new GlobalException(GlobalErrorCode._BAD_REQUEST);
+
         for(int i = 0;i < reviewList.size();i++) {
             Review review = reviewList.get(i);
             ReviewResponseDto reviewResponseDto = new ReviewResponseDto(review);
@@ -167,12 +184,18 @@ public class ReviewService {
     // 영화 리뷰 조회, 평점 낮음 순
     public List<ReviewResponseDto> findReviewListByMovieIdRatingAsc(Long movieId, int page) {
 
-        List<ReviewResponseDto> reviewResponseDtoList = new ArrayList<>();
+        Movie movie = movieRepository.findById(movieId).orElse(null);
+        if (movie == null)
+            throw new GlobalException(GlobalErrorCode._BAD_REQUEST);
 
+        List<ReviewResponseDto> reviewResponseDtoList = new ArrayList<>();
         page = page - 1; // page, 0부터 시작
         Pageable pageable = PageRequest.of(page, 10);
 
         List<Review> reviewList = reviewRepository.findByMovieRatingAsc(movieId, pageable);
+        if (reviewList.isEmpty())
+            throw new GlobalException(GlobalErrorCode._NO_CONTENTS);
+
         for(int i = 0;i < reviewList.size();i++) {
             Review review = reviewList.get(i);
             ReviewResponseDto reviewResponseDto = new ReviewResponseDto(review);
