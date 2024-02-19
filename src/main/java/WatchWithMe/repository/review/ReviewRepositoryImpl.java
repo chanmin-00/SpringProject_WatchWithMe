@@ -1,7 +1,6 @@
 package WatchWithMe.repository.review;
 
 import WatchWithMe.domain.Review;
-import WatchWithMe.repository.MemberRepository;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -13,10 +12,9 @@ import static WatchWithMe.domain.QReview.review;
 public class ReviewRepositoryImpl implements ReviewRepositoryCustom{
 
     private final JPAQueryFactory queryFactory;
-    private final MemberRepository memberRepository;
 
     @Override
-    public List<Review> searchByMember(Long memberId, Pageable pageable){
+    public List<Review> findByMember(Long memberId, Pageable pageable){
 
         return queryFactory.select(review).from(review)
                 .where(reviewMemberEq(memberId))
@@ -27,7 +25,7 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom{
     }
 
     @Override
-    public List<Review> searchByMovie(Long movieId, Pageable pageable){
+    public List<Review> findByMovie(Long movieId, Pageable pageable){
 
         return queryFactory.select(review).from(review)
                 .where(reviewMovieEq(movieId))
@@ -39,7 +37,7 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom{
 
     // 리뷰 평점 높음순 조회
     @Override
-    public List<Review> searchByMovieRatingDesc(Long movieId, Pageable pageable){
+    public List<Review> findByMovieRatingDesc(Long movieId, Pageable pageable){
 
         return queryFactory.select(review).from(review)
                 .where(reviewMovieEq(movieId))
@@ -50,13 +48,24 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom{
     }
 
     // 리뷰 평점 낮음순 조회
-    public List<Review> searchByMovieRatingAsc(Long movieId, Pageable pageable) {
+    @Override
+    public List<Review> findByMovieRatingAsc(Long movieId, Pageable pageable) {
 
         return queryFactory.select(review).from(review)
                 .where(reviewMovieEq(movieId))
                 .orderBy(review.memberRating.asc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
+                .fetch();
+    }
+
+    // 리뷰 조건 검색, 리뷰 텍스트 검색
+    @Override
+    public List<Review> searchReviewText(String word) {
+
+        return queryFactory.select(review).from(review)
+                .where(reviewTextLike(word))
+                .orderBy(review.reviewId.desc())
                 .fetch();
     }
 
@@ -74,5 +83,21 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom{
             return null;
 
         return review.movie.movieId.eq(movieId);
+    }
+
+    private BooleanExpression reviewTextLike(String searchText){
+
+        if (searchText == null || searchText.isEmpty())
+            return null;
+
+        return review.reviewText.like("%" + searchText + "%");
+    }
+
+    private BooleanExpression reviewMemberRatingGenreLike(String searchText){
+
+        if (searchText == null || searchText.isEmpty())
+            return null;
+
+        return review.memberRatingGenre.like("%" + searchText + "%");
     }
 }
