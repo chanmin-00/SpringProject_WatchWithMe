@@ -40,6 +40,10 @@ public class Member extends BaseEntity {
     @OneToMany(mappedBy = "member")
     private List<Review> reviewList; // 리뷰 리스트
 
+    public void changePassword(String newPassword) {
+        this.password = newPassword;
+    }
+
     public void setFavoriteGenre(List<String> favoriteGenre){
         this.favoriteGenre = favoriteGenre;
     }

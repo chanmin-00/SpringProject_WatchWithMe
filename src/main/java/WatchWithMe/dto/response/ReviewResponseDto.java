@@ -31,7 +31,9 @@ public class ReviewResponseDto {
         this.openYear = review.getMovie().getOpenYear();
         this.userRating = review.getMovie().getUserRating();
         this.genre = review.getMovie().getGenre();
-        this.author = review.getMember().getName();
-
+        if (review.getMember() != null)
+            this.author = review.getMember().getName();
+        else
+            this.author = "";
     }
 }

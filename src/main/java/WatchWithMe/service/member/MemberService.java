@@ -6,6 +6,7 @@ import WatchWithMe.domain.Member;
 import WatchWithMe.domain.Review;
 import WatchWithMe.dto.request.ActorListRequestDto;
 import WatchWithMe.dto.request.DirectorListRequestDto;
+import WatchWithMe.dto.request.member.ChangePasswordRequestDto;
 import WatchWithMe.dto.request.member.SignUpRequestDto;
 import WatchWithMe.dto.response.LoginResponseDto;
 import WatchWithMe.dto.response.MemberResponseDto;
@@ -39,6 +40,9 @@ public class MemberService {
 
     // 회원 가입
     public Long save(SignUpRequestDto signUpRequestDto) {
+
+        validateSignUpRequest(signUpRequestDto); // 이메일, 비밀번호 유효성 검사
+
         String password = passwordEncoder.encode(signUpRequestDto.password());
         Member member = Member.builder()
                 .email(signUpRequestDto.email())
@@ -57,6 +61,14 @@ public class MemberService {
 
     // 로그인 인증 및 토큰 발급
     public LoginResponseDto authenticate(String email, String password) {
+        Member member = memberRepository.findByEmail(email).orElse(null);
+        if (member == null)
+            throw new GlobalException(GlobalErrorCode._ACCOUNT_NOT_FOUND); // 기존 회원 여부 확인
+
+        if (!passwordEncoder.matches(password, member.getPassword())) {
+            throw new GlobalException(GlobalErrorCode._DIFF_PASSWORD); // 비밀번호 일치 여부 확인
+        }
+
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(email, password);
 
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
@@ -70,7 +82,7 @@ public class MemberService {
     }
 
     // 회원가입 아이디, 비밀번호 유효성 검사
-    public boolean validateSignUpRequest(SignUpRequestDto signUpRequestDto){
+    public void validateSignUpRequest(SignUpRequestDto signUpRequestDto){
 
         String email = signUpRequestDto.email();
         String password = signUpRequestDto.password();
@@ -84,9 +96,40 @@ public class MemberService {
         // 비밀번호 일치 검사
         if (!password.equals(confirmPassword))
             throw new GlobalException(GlobalErrorCode._DIFF_PASSWORD);
+    }
 
-        return true;
+    // 비밀번호 변경
+    public Long changePassword(ChangePasswordRequestDto changePasswordRequestDto){
 
+        String email = changePasswordRequestDto.email();
+        String password = changePasswordRequestDto.password();
+        String newPassword = passwordEncoder.encode(changePasswordRequestDto.newPassword());
+
+        Member member = memberRepository.findByEmail(email).orElse(null);
+        if (member == null)
+            throw new GlobalException(GlobalErrorCode._ACCOUNT_NOT_FOUND);
+        if (!passwordEncoder.matches(password, member.getPassword()))
+            throw new GlobalException(GlobalErrorCode._DIFF_PASSWORD);
+
+        member.changePassword(newPassword);
+        memberRepository.save(member);
+
+        return member.getMemberId();
+    }
+
+    // 회원 삭제
+    public void deleteMember(Long memberId) {
+
+        Member member = memberRepository.findById(memberId).orElse(null);
+        if (member == null)
+            throw new GlobalException(GlobalErrorCode._ACCOUNT_NOT_FOUND);
+
+        List<Review> reviewList = member.getReviewList();
+        for(Review review : reviewList) {
+            review.setMember(null);
+        }
+
+        memberRepository.delete(member);
     }
 
     // 사용자 정보 조회

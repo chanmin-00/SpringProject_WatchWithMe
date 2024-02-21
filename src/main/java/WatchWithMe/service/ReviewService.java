@@ -68,6 +68,10 @@ public class ReviewService {
         if (review == null)
             throw new GlobalException(GlobalErrorCode._BAD_REQUEST);
 
+        Member member = review.getMember();
+        if (member == null)
+            throw new GlobalException(GlobalErrorCode._BAD_REQUEST);
+
         Movie movie = movieRepository.findById(review.getMovie().getMovieId()).orElse(null);
         if (movie == null)
             throw new GlobalException(GlobalErrorCode._BAD_REQUEST);
@@ -92,6 +96,10 @@ public class ReviewService {
 
         Review review = reviewRepository.findById(reviewId).orElse(null);
         if (review == null)
+            throw new GlobalException(GlobalErrorCode._BAD_REQUEST);
+
+        Member member = review.getMember();
+        if (member == null)
             throw new GlobalException(GlobalErrorCode._BAD_REQUEST);
 
         Movie movie = movieRepository.findById(review.getMovie().getMovieId()).orElse(null);
