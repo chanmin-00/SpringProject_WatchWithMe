@@ -2,6 +2,7 @@ package WatchWithMe.controller;
 
 import WatchWithMe.dto.request.ActorListRequestDto;
 import WatchWithMe.dto.request.DirectorListRequestDto;
+import WatchWithMe.dto.request.member.ChangePasswordRequestDto;
 import WatchWithMe.dto.request.member.LoginRequestDto;
 import WatchWithMe.dto.request.member.SignUpRequestDto;
 import WatchWithMe.dto.response.LoginResponseDto;
@@ -28,11 +29,7 @@ public class MemberController {
     @PostMapping("/token")
     @Operation(summary = "로그인", description = "이메일 및 비밀번호 입력 필요")
     public ApiResponse<LoginResponseDto> authorize(@RequestBody @Valid LoginRequestDto loginRequestDto) {
-        ApiResponse<LoginResponseDto> data;
-
-        LoginResponseDto accessToken = memberService.authenticate(loginRequestDto.email(), loginRequestDto.password());
-        data =  ApiResponse.onSuccess("로그인 성공, 토큰을 발급했습니다", accessToken);
-        return data;
+        return ApiResponse.onSuccess("로그인 성공, 토큰을 발급했습니다", memberService.authenticate(loginRequestDto.email(), loginRequestDto.password()));
     }
 
 
@@ -40,12 +37,14 @@ public class MemberController {
     @PostMapping
     @Operation(summary = "회원 가입", description = "이메일, 비밀번호, 이름, 전화번호, 동의 확인 입력 필요")
     public ApiResponse<Long> join(@RequestBody @Valid SignUpRequestDto signUpRequestDto) {
-        Long memberId;
-        ApiResponse<Long> data;
-        memberService.validateSignUpRequest(signUpRequestDto);
-        memberId = memberService.save(signUpRequestDto);
-        data = ApiResponse.onSuccess("회원가입에 성공하였습니다.", memberId);
-        return data;
+        return ApiResponse.onSuccess("회원가입에 성공하였습니다.", memberService.save(signUpRequestDto));
+    }
+
+    // 비밀번호 변경
+    @PostMapping("/change/password")
+    @Operation(summary = "비밀번호 변경", description = "이메일, 비밀번호, 새 비밀번호 입력 필요")
+    public ApiResponse<Long> changePassword(@RequestBody @Valid ChangePasswordRequestDto changePasswordRequestDto) {
+        return ApiResponse.onSuccess("비밀번호 변경에 성공하였습니다", memberService.changePassword(changePasswordRequestDto));
     }
 
     // 회원 탈퇴

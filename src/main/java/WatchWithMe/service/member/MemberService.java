@@ -6,6 +6,7 @@ import WatchWithMe.domain.Member;
 import WatchWithMe.domain.Review;
 import WatchWithMe.dto.request.ActorListRequestDto;
 import WatchWithMe.dto.request.DirectorListRequestDto;
+import WatchWithMe.dto.request.member.ChangePasswordRequestDto;
 import WatchWithMe.dto.request.member.SignUpRequestDto;
 import WatchWithMe.dto.response.LoginResponseDto;
 import WatchWithMe.dto.response.MemberResponseDto;
@@ -95,6 +96,25 @@ public class MemberService {
         // 비밀번호 일치 검사
         if (!password.equals(confirmPassword))
             throw new GlobalException(GlobalErrorCode._DIFF_PASSWORD);
+    }
+
+    // 비밀번호 변경
+    public Long changePassword(ChangePasswordRequestDto changePasswordRequestDto){
+
+        String email = changePasswordRequestDto.email();
+        String password = changePasswordRequestDto.password();
+        String newPassword = passwordEncoder.encode(changePasswordRequestDto.newPassword());
+
+        Member member = memberRepository.findByEmail(email).orElse(null);
+        if (member == null)
+            throw new GlobalException(GlobalErrorCode._ACCOUNT_NOT_FOUND);
+        if (!passwordEncoder.matches(password, member.getPassword()))
+            throw new GlobalException(GlobalErrorCode._DIFF_PASSWORD);
+
+        member.changePassword(newPassword);
+        memberRepository.save(member);
+
+        return member.getMemberId();
     }
 
     // 회원 삭제
