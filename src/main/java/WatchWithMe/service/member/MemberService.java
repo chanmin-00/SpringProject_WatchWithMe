@@ -60,6 +60,14 @@ public class MemberService {
 
     // 로그인 인증 및 토큰 발급
     public LoginResponseDto authenticate(String email, String password) {
+        Member member = memberRepository.findByEmail(email).orElse(null);
+        if (member == null)
+            throw new GlobalException(GlobalErrorCode._ACCOUNT_NOT_FOUND); // 기존 회원 여부 확인
+
+        if (!passwordEncoder.matches(password, member.getPassword())) {
+            throw new GlobalException(GlobalErrorCode._DIFF_PASSWORD); // 비밀번호 일치 여부 확인
+        }
+
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(email, password);
 
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
