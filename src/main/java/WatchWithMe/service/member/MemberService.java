@@ -39,6 +39,9 @@ public class MemberService {
 
     // 회원 가입
     public Long save(SignUpRequestDto signUpRequestDto) {
+
+        validateSignUpRequest(signUpRequestDto); // 이메일, 비밀번호 유효성 검사
+
         String password = passwordEncoder.encode(signUpRequestDto.password());
         Member member = Member.builder()
                 .email(signUpRequestDto.email())
@@ -70,7 +73,7 @@ public class MemberService {
     }
 
     // 회원가입 아이디, 비밀번호 유효성 검사
-    public boolean validateSignUpRequest(SignUpRequestDto signUpRequestDto){
+    public void validateSignUpRequest(SignUpRequestDto signUpRequestDto){
 
         String email = signUpRequestDto.email();
         String password = signUpRequestDto.password();
@@ -84,9 +87,6 @@ public class MemberService {
         // 비밀번호 일치 검사
         if (!password.equals(confirmPassword))
             throw new GlobalException(GlobalErrorCode._DIFF_PASSWORD);
-
-        return true;
-
     }
 
     // 회원 삭제
