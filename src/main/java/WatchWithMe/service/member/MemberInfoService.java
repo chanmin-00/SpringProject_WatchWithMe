@@ -1,6 +1,8 @@
 package WatchWithMe.service.member;
 
 import WatchWithMe.domain.Member;
+import WatchWithMe.global.exception.GlobalException;
+import WatchWithMe.global.exception.code.GlobalErrorCode;
 import WatchWithMe.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -20,8 +22,10 @@ public class MemberInfoService implements UserDetailsService {
     private final MemberRepository memberRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Member member = memberRepository.findByEmail(username).orElseThrow(() -> new UsernameNotFoundException(username));
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        Member member = memberRepository.findByEmail(email).orElse(null);
+        if (member == null)
+            throw new GlobalException(GlobalErrorCode._ACCOUNT_NOT_FOUND);
 
         Member.Role role = Objects.requireNonNullElse(member.getRole(), Member.Role.USER);
         List<? extends GrantedAuthority> authorities = Arrays.asList(new SimpleGrantedAuthority(role.name()));

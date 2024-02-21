@@ -51,7 +51,11 @@ public class Review {
     }
 
     public void setMember(Member member) {
-        this.member = member;
-        member.getReviewList().add(this);
+        if (member == null)
+            this.member = null;
+        else {
+            this.member = member;
+            member.getReviewList().add(this);
+        }
     }
 }

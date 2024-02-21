@@ -48,6 +48,14 @@ public class MemberController {
         return data;
     }
 
+    // 회원 탈퇴
+    @DeleteMapping("/delete/{memberId}")
+    @Operation(summary = "회원 탈퇴", description = "memberId 입력 필요")
+    public ApiResponse deleteMember(@PathVariable Long memberId) {
+        memberService.deleteMember(memberId);
+        return ApiResponse.onSuccess("회원 탈퇴에 성공하였습니다", "");
+    }
+
     // 사용자 정보 조회
     @GetMapping("/get/{memberId}")
     @Operation(summary = "사용자 정보 조회", description = "사용자 정보 반환")

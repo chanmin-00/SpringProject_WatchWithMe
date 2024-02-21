@@ -89,6 +89,21 @@ public class MemberService {
 
     }
 
+    // 회원 삭제
+    public void deleteMember(Long memberId) {
+
+        Member member = memberRepository.findById(memberId).orElse(null);
+        if (member == null)
+            throw new GlobalException(GlobalErrorCode._ACCOUNT_NOT_FOUND);
+
+        List<Review> reviewList = member.getReviewList();
+        for(Review review : reviewList) {
+            review.setMember(null);
+        }
+
+        memberRepository.delete(member);
+    }
+
     // 사용자 정보 조회
     public MemberResponseDto getMember(Long memberId) {
 
