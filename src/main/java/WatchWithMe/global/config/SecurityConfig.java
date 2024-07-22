@@ -52,7 +52,8 @@ public class SecurityConfig {
                                     "/swagger-ui.html",
                                      "/api/v1/actor/**",
                                     "/api/v1/director/**",
-                                    "/api/v1/movie/**"
+                                    "/api/v1/movie/**",
+                                      "/health"
                                     ).permitAll()
                             .requestMatchers("/api/v1/admin/**").hasAuthority("ADMIN")
                             .anyRequest().authenticated();
