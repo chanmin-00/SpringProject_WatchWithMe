@@ -53,6 +53,7 @@ public class SecurityConfig {
                                      "/api/v1/actor/**",
                                     "/api/v1/director/**",
                                     "/api/v1/movie/**",
+                                      "api/v1/admin/**",
                                       "/health"
                                     ).permitAll()
                             .requestMatchers("/api/v1/admin/**").hasAuthority("ADMIN")
