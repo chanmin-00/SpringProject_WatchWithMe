@@ -49,7 +49,12 @@ public class SecurityConfig {
                                     "/api/v1/member/exists/**",
                                     "/v3/api-docs/**",
                                     "/swagger-ui/**",
-                                    "/swagger-ui.html"
+                                    "/swagger-ui.html",
+                                     "/api/v1/actor/**",
+                                    "/api/v1/director/**",
+                                    "/api/v1/movie/**",
+                                      "api/v1/admin/**",
+                                      "/health"
                                     ).permitAll()
                             .requestMatchers("/api/v1/admin/**").hasAuthority("ADMIN")
                             .anyRequest().authenticated();
