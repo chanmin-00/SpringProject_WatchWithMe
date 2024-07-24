@@ -30,15 +30,16 @@ public class CustomJwtFilter extends GenericFilterBean {
         String requestURI = req.getRequestURI();
 
         // 토큰 유효성 검사
-        if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)) { // 토큰에 이상이 없는 경우
-            // 토큰에서 사용자명, 권한을 추출하여 스프링 시큐리티 사용자를 만들어 Authentication 반환
-            Authentication authentication = tokenProvider.getAuthentication(jwt);
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-            log.info("Security Context에 " + authentication.getName() + "인증 정보를 저장했습니다. URI : " + requestURI);
-        } else {
-            log.info("유효한 JWT 토큰이 없습니다. URI : " + requestURI);
+        if (StringUtils.hasText(jwt)) { // 토큰에 이상이 없는 경우
+            if (tokenProvider.validateToken(jwt)){ // 토큰에서 사용자명, 권한을 추출하여 스프링 시큐리티 사용자를 만들어 Authentication 반환
+                Authentication authentication = tokenProvider.getAuthentication(jwt);
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+                log.info("Security Context에 " + authentication.getName() + "인증 정보를 저장했습니다. URI : " + requestURI);
+            }
+            else {
+                log.info("유효하지 않은 토큰입니다. URI : " + requestURI);
+            }
         }
-
         chain.doFilter(request, response);
     }
 
