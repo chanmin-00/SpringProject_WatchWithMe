@@ -18,6 +18,7 @@ public class CorsFilterConfig {
         config.addAllowedMethod("*");
 
         source.registerCorsConfiguration("/api/**", config);
+        source.registerCorsConfiguration("/health", config);
 
         return new CorsFilter((CorsConfigurationSource) source);
     }
