@@ -36,7 +36,7 @@ public class CustomJwtFilter extends GenericFilterBean {
             SecurityContextHolder.getContext().setAuthentication(authentication);
             log.info("Security Context에 " + authentication.getName() + "인증 정보를 저장했습니다. URI : " + requestURI);
         } else {
-            log.info("유효한 JWT 토큰이 없습니다. URI: " + requestURI);
+            log.info("유효한 JWT 토큰이 없습니다. URI : " + requestURI);
         }
 
         chain.doFilter(request, response);

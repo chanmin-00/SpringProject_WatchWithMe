@@ -36,8 +36,6 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf(c -> c.disable())
-                .addFilterBefore(corsFilter, UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(customJwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement(c -> c.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .exceptionHandling(c -> {
                     c.authenticationEntryPoint(jwtAuthenticationEntryPoint).accessDeniedHandler(jwtAccessDeniedHandler);
@@ -58,6 +56,8 @@ public class SecurityConfig {
                             .requestMatchers("/api/v1/admin/**").hasAuthority("ADMIN")
                             .anyRequest().authenticated();
                 });
+                http.addFilterBefore(customJwtFilter, UsernamePasswordAuthenticationFilter.class)
+                        .addFilterBefore(corsFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
