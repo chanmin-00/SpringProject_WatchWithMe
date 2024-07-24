@@ -19,7 +19,7 @@ public class SchedulerConfig implements SchedulingConfigurer {
     private final int POOL_SIZE = 10; // 스레드 풀 사이즈
     private final MovieService movieService;
 
-    @Scheduled(initialDelay=1000, fixedDelay=60000 * 5) // 5분 마다 수행
+    @Scheduled(initialDelay=1000, fixedDelay =  1000 * 60 * 60 * 24) // 24시간마다 실행
     public void updateMovieList() {
         try {
             movieService.updateMovieList();
