@@ -51,7 +51,8 @@ public class SecurityConfig {
                                      "/api/v1/actor/**",
                                     "/api/v1/director/**",
                                     "/api/v1/movie/**",
-                                      "/health"
+                                    "/api/v1/review/**",
+                                    "/health"
                                     ).permitAll()
                             .requestMatchers("/api/v1/admin/**").hasAuthority("ADMIN")
                             .anyRequest().authenticated();
