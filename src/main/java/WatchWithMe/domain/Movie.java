@@ -2,6 +2,8 @@ package WatchWithMe.domain;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.Setter;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,6 +20,7 @@ public class Movie extends BaseEntity{
 
     private String openYear; // 제작 연도
 
+    @Setter
     private Double userRating; // 평균 평점
 
     private String genre; // 장르
@@ -40,8 +43,6 @@ public class Movie extends BaseEntity{
         movie.genre = genre;
         return movie;
     }
-
-    public void setUserRating(Double userRating) { this.userRating = userRating; }
 
     public void addMovieActor(MovieActor movieActor) {
         this.movieActorList.add(movieActor);
