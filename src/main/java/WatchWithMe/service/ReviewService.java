@@ -7,6 +7,7 @@ import WatchWithMe.dto.request.review.WriteReviewRequestDto;
 import WatchWithMe.dto.response.ReviewResponseDto;
 import WatchWithMe.global.exception.GlobalException;
 import WatchWithMe.global.exception.code.GlobalErrorCode;
+import WatchWithMe.redis.service.ReviewCacheService;
 import WatchWithMe.repository.MemberRepository;
 import WatchWithMe.repository.review.ReviewRepository;
 import WatchWithMe.repository.movie.MovieRepository;
@@ -23,6 +24,7 @@ public class ReviewService {
     private final ReviewRepository reviewRepository;
     private final MemberRepository memberRepository;
     private final MovieRepository movieRepository;
+    private final ReviewCacheService reviewCacheService;
 
     // 리뷰 DB 저장
     public Long write(WriteReviewRequestDto writeReviewRequestDto){
@@ -41,18 +43,12 @@ public class ReviewService {
         if (movie == null)
             throw new GlobalException(GlobalErrorCode._BAD_REQUEST);
 
-        Double userRating = movie.getUserRating(); // 영화 평균 평점
-        int reviewListSize = movie.getReviewList().size(); // 영화별 리뷰 개수
-        if (userRating == null)
-            userRating = 0.0;
-
-        userRating = (userRating * reviewListSize + memberRating) / (reviewListSize + 1);
-        movie.setUserRating(userRating); // 영화 평균 평점 갱신
-
         Review review = Review.createReview(reviewText, memberRating, memberRatingGenre);
         review.setMember(member);
         review.setMovie(movie);
         reviewRepository.save(review);
+
+        reviewCacheService.saveRating(movieId.toString(), memberRating.toString());
 
         return review.getReviewId();
     }
@@ -255,4 +251,5 @@ public class ReviewService {
 
         return reviewResponseDtoList.subList(startIndex, endIndex); // 페이징 처리 후 리턴
     }
+
 }

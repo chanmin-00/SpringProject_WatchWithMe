@@ -11,6 +11,7 @@ import WatchWithMe.repository.director.DirectorRepository;
 import WatchWithMe.repository.MovieActorRepository;
 import WatchWithMe.repository.MovieDirectorRepository;
 import WatchWithMe.repository.movie.MovieRepository;
+import jakarta.transaction.Transactional;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -39,6 +40,16 @@ public class MovieService {
     private final MovieDirectorRepository movieDirectorRepository;
     private final DirectorRepository directorRepository;
     private final MovieRepository movieRepository;
+
+    public Movie getMovie(Long movieId) {
+        return movieRepository.findById(movieId).orElseThrow(() -> new GlobalException(GlobalErrorCode._NO_CONTENTS));
+    }
+
+    @Transactional
+    public List<Review> getReviewList(Long movieId) {
+        Movie movie = movieRepository.findById(movieId).orElseThrow(() -> new GlobalException(GlobalErrorCode._NO_CONTENTS));
+        return movie.getReviewList();
+    }
 
     //영화 정보 update
     public void updateMovieList() throws Exception {
