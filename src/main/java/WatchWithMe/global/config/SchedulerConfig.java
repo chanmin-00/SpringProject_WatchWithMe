@@ -36,7 +36,7 @@ public class SchedulerConfig implements SchedulingConfigurer {
         }
     }
 
-    @Scheduled(initialDelay=1000, fixedDelay = 60000 *10) // 10분마다 실행
+    @Scheduled(initialDelay=1000, fixedDelay = 1000 * 60 * 60 *24 ) // 24시간마다 실행
     @Transactional
     public void calculateAverageReviewRating() {
         Set<String> changedMovieList = reviewCacheService.getChangedMovieList();
