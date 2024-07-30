@@ -1,7 +1,7 @@
 ---
 name: Feature Template
 about: 기능 추가 이슈 템플릿
-title: ''
+title: "[Feat]"
 labels: ''
 assignees: ''
 
@@ -10,7 +10,10 @@ assignees: ''
 ## 개요
 > 추가하려는 기능에 대해 간략하게 설명해주세요.
 
-## 작업 내용
+## 작업 브랜치명
+> 작업 브랜치명을 작성해주세요 ex) feature/이슈번호-기능
+
+## 작업 내용(추가할려고 하는 기능별로 작성해주세요!)
 - [ ] ToDo
 - [ ] ToDo
 - [ ] ToDo
