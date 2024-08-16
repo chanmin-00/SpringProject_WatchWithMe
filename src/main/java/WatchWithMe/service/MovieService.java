@@ -6,6 +6,7 @@ import WatchWithMe.dto.response.movie.MoviePageResponseDto;
 import WatchWithMe.dto.response.movie.MovieResponseDto;
 import WatchWithMe.global.exception.GlobalException;
 import WatchWithMe.global.exception.code.GlobalErrorCode;
+import WatchWithMe.repository.MemberRepository;
 import WatchWithMe.repository.actor.ActorRepository;
 import WatchWithMe.repository.director.DirectorRepository;
 import WatchWithMe.repository.MovieActorRepository;
@@ -25,6 +26,7 @@ import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
+
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
@@ -40,6 +42,9 @@ public class MovieService {
     private final MovieDirectorRepository movieDirectorRepository;
     private final DirectorRepository directorRepository;
     private final MovieRepository movieRepository;
+    private final NotificationService notificationService;
+    private final MemberRepository memberRepository;
+
 
     public Movie getMovie(Long movieId) {
         return movieRepository.findById(movieId).orElseThrow(() -> new GlobalException(GlobalErrorCode._NO_CONTENTS));
@@ -69,7 +74,7 @@ public class MovieService {
         boxOfficeSiteUrl = "http://www.kobis.or.kr/kobisopenapi/webservice/rest/boxoffice";
         movieInfoSiteUrl = "http://www.kobis.or.kr/kobisopenapi/webservice/rest/movie";
         targetDate = LocalDate.now().minusDays(1).toString(); // 어제 날짜
-        targetDate = targetDate.replace("-","");
+        targetDate = targetDate.replace("-", "");
         key = "05729aeda1ecc537be73bd2cc911b528";
         itemPerPage = "10";
 
@@ -122,7 +127,7 @@ public class MovieService {
             JSONArray directorList = (JSONArray) movieInfo.get("directors");
 
             movieName = movieInfo.get("movieNm").toString(); // 영화명 설정
-            movieOpenDate = movieInfo.get("openDt").toString().substring(0,4); // 영화 개봉 연도 설정
+            movieOpenDate = movieInfo.get("openDt").toString().substring(0, 4); // 영화 개봉 연도 설정
             movieGenre = "";
             for (int j = 0; j < genreList.size(); j++) {
                 JSONObject object;
@@ -131,7 +136,7 @@ public class MovieService {
                 break; // 대표 장르 1개만 설정
             }
 
-            if (!movieRepository.findByTitleAndOpenYearAndGenre(movieName, movieOpenDate, movieGenre).isEmpty()){
+            if (!movieRepository.findByTitleAndOpenYearAndGenre(movieName, movieOpenDate, movieGenre).isEmpty()) {
                 continue; // DB에 이미 존재하는 경우
             }
 
@@ -144,7 +149,7 @@ public class MovieService {
                 actorName = object.get("peopleNm").toString(); // 영화 배우 이름 설정
 
                 actor = actorRepository.findByName(actorName).orElse(null);
-                if (actor == null){ // DB에 존재하지 않는 경우
+                if (actor == null) { // DB에 존재하지 않는 경우
                     actor = Actor.createActor(actorName); // 배우 객체 생성
                 }
                 MovieActor movieActor = MovieActor.createMovieActor(movie, actor);
@@ -161,7 +166,7 @@ public class MovieService {
                 directorName = object.get("peopleNm").toString(); // 영화 감독 이름 설정
 
                 director = directorRepository.findByName(directorName).orElse(null);
-                if (director == null){ // DB에 존재하지 않는 경우
+                if (director == null) { // DB에 존재하지 않는 경우
                     director = director.createDirector(directorName); // 감독 객체 생성
                 }
                 MovieDirector movieDirector = MovieDirector.createMovieDirector(movie, director);
@@ -170,8 +175,13 @@ public class MovieService {
                 directorRepository.save(director);
                 movieDirectorRepository.save(movieDirector);
             }
-
         }
+
+        if (!movieCodeList.isEmpty()) {
+            List<Member> memberList = memberRepository.findAll();
+            memberList.forEach(member -> notificationService.send(member, "영화 정보가 업데이트 되었습니다."));
+        }
+
     }
 
     // 영화 단건(id) 조회
@@ -247,7 +257,7 @@ public class MovieService {
     }
 
     // 영화 조건 검색 (영화명, 영화 장르, 개봉 연도, 평점)
-    public List<MovieResponseDto> searchMovieList(MovieListRequestDto movieListRequestDto, int page){
+    public List<MovieResponseDto> searchMovieList(MovieListRequestDto movieListRequestDto, int page) {
         List<MovieResponseDto> movieResponseDtoList = new ArrayList<>();
 
         page = page - 1; // page, 0부터 시작
@@ -301,7 +311,7 @@ public class MovieService {
 
         // 영화명으로 검색된 경우
         List<Movie> movieList = movieRepository.search(movieListRequestDto, pageable);
-        for(int i = 0; i < movieList.size(); i++){
+        for (int i = 0; i < movieList.size(); i++) {
             MovieResponseDto movieResponseDto = new MovieResponseDto(movieList.get(i));
             movieResponseDtoList.add(movieResponseDto);
         }
@@ -309,7 +319,7 @@ public class MovieService {
     }
 
     // 영화 조건 검색 (영화명, 영화 장르, 개봉 연도, 평점), 평점 높음순
-    public List<MovieResponseDto> searchMovieListRatingDesc(MovieListRequestDto movieListRequestDto, int page){
+    public List<MovieResponseDto> searchMovieListRatingDesc(MovieListRequestDto movieListRequestDto, int page) {
         List<MovieResponseDto> movieResponseDtoList = new ArrayList<>();
 
         page = page - 1; // page, 0부터 시작
@@ -363,7 +373,7 @@ public class MovieService {
 
         // 영화명으로 검색된 경우
         List<Movie> movieList = movieRepository.search(movieListRequestDto, pageable);
-        for(int i = 0; i < movieList.size(); i++){
+        for (int i = 0; i < movieList.size(); i++) {
             MovieResponseDto movieResponseDto = new MovieResponseDto(movieList.get(i));
             movieResponseDtoList.add(movieResponseDto);
         }
@@ -375,7 +385,7 @@ public class MovieService {
     }
 
     // 영화 조건 검색 (영화명, 영화 장르, 개봉 연도, 평점), 평점 낮음순
-    public List<MovieResponseDto> searchMovieListRatingAsc(MovieListRequestDto movieListRequestDto, int page){
+    public List<MovieResponseDto> searchMovieListRatingAsc(MovieListRequestDto movieListRequestDto, int page) {
         List<MovieResponseDto> movieResponseDtoList = new ArrayList<>();
 
         page = page - 1; // page, 0부터 시작
@@ -429,7 +439,7 @@ public class MovieService {
 
         // 영화명으로 검색된 경우
         List<Movie> movieList = movieRepository.search(movieListRequestDto, pageable);
-        for(int i = 0; i < movieList.size(); i++){
+        for (int i = 0; i < movieList.size(); i++) {
             MovieResponseDto movieResponseDto = new MovieResponseDto(movieList.get(i));
             movieResponseDtoList.add(movieResponseDto);
         }

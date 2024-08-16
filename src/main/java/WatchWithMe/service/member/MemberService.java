@@ -142,6 +142,10 @@ public class MemberService {
         return new MemberResponseDto(member);
     }
 
+    public Member getMemberById(Long memberId) {
+        return memberRepository.findById(memberId).orElse(null);
+    }
+
     // 선호 장르 목록 업데이트
     public Long updateFavoriteGenre(Long memberId){
 
